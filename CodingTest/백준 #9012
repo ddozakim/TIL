@@ -1,0 +1,57 @@
+백준 9012번
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+bool isVPS(string s){
+    stack<char> stack;
+    if((s.size()%2)!=0 ){
+        return false;
+    }
+    for(int i=0; i<s.size();i++){
+        if(stack.empty()){
+            if(s[i]==')'){
+                return false;
+            }
+            stack.push(s[i]);
+        }
+        else{
+            if(stack.top()==s[i]){
+                stack.push(s[i]);
+            }
+            else{
+                stack.pop();
+            }
+
+        }
+    }
+    if(stack.empty()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);  
+    cin.tie(NULL);                
+    
+    int T;
+    cin>>T;
+    string s;
+    
+    for(int i=0;i<T;i++){
+        s="";
+        cin>>s;
+        if(isVPS(s)){
+            cout<<"YES"<<"\n";
+        }
+        else{
+            cout<<"NO"<<"\n";
+        }
+    }
+    return 0;
+}
