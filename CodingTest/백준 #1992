@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector> 
+using namespace std;
+
+vector <vector<int>> v(64, vector<int>(64, 0));
+
+bool isSame(int x, int y, int dist){
+    int color=v[x][y];
+    for(int i=x ; i<x+dist ; i++){
+        for(int j=y ; j<y+dist ; j++){
+            if(color!=v[i][j]){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void divide(int x , int y, int dist){
+    
+    if(dist==1 || isSame(x,y,dist)){
+        cout<<v[x][y];
+        return;
+    }
+    else{
+        cout<<"(";
+        // 각 분면마다
+        divide(x,y,dist/2); //1
+        divide(x,y+dist/2,dist/2); //2
+        divide(x+(dist/2),y,dist/2); //3
+        divide(x+(dist/2),y+dist/2,dist/2); //4
+         cout << ")";
+    }
+    
+    
+}
+
+
+int main()
+{
+    int N;
+    cin>>N;
+    for(int i=0;i<N;i++){
+        for(int j=0; j<N;j++){
+            char ch;
+            cin >> ch;
+            v[i][j] = ch - '0';
+        }
+    }
+    divide(0,0,N);
+    return 0;
+}
