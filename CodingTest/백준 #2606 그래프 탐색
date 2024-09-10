@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector> 
+#include <queue>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+int N,M;
+int cnt=0;
+
+void DFS(int x,vector<bool>& visited,vector<int> graph[]){ //벡터 매개변수 참조값(&)으로 받기!!
+    visited[x]=true;
+    for(int i=0; i<graph[x].size();i++){
+        int y=graph[x][i];
+        if(!visited[y]){
+            DFS(y,visited,graph);
+            cnt++;
+        }
+    }
+    return;
+}
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    cin>>N>>M;
+    
+    vector<bool> visited(N+1, false);
+    vector<int> graph[N+1];
+    for(int i=0; i<M;i++ ){
+        int sn,cn;
+        cin>>sn>>cn;
+        graph[sn].push_back(cn);
+        graph[cn].push_back(sn);
+    }
+    DFS(1,visited,graph);
+    cout<<cnt;
+    return 0;
+}
