@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n, m;
+    cin >> n;
+    vector<int> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+
+    cin >> m;
+    vector<int> key(m);
+    for (int i = 0; i < m; i++) {
+        cin >> key[i];
+    }
+    sort(v.begin(), v.end());
+
+    // 각 key 값에 대해 등장 횟수를 찾고 출력
+    for (int i = 0; i < m; i++) {
+        // lower_bound: key[i] 이상인 첫 번째 위치
+        // upper_bound: key[i] 초과인 첫 번째 위치
+        int lower = lower_bound(v.begin(), v.end(), key[i]) - v.begin();
+        int upper = upper_bound(v.begin(), v.end(), key[i]) - v.begin();
+
+        cout << upper - lower << ' ';  
+    }
+
+    return 0;
+}
