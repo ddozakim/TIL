@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int BinarySearch(int left, int right, int N, vector<int> &v){
+    
+    int result = 0;
+    
+    while (left <= right) {
+        int mid = (left + right) / 2;
+        int sum = 0;
+
+        for (int i = 0; i < v.size(); i++) {
+            sum += v[i] / mid;
+        }
+
+        // 디버깅용 출력
+        cout << "mid: " << mid << ", sum: " << sum << endl;
+
+        if (sum >= N) {
+            result = mid; // 조건을 만족하면 결과 갱신
+            left = mid + 1; // 더 큰 값 시도
+        } else {
+            right = mid - 1; // 더 작은 값 시도
+        }
+    }
+    
+    return result;
+}
+
+int main()
+{
+    ios::sync_with_stdio(0);
+	cin.tie(0);
+	
+    int K, N;
+    cin >> K >> N;
+    vector<int> v(K);
+
+    for(int i = 0; i < K; i++){
+        cin >> v[i];
+    }
+    sort(v.begin(), v.end());
+    
+    cout << BinarySearch(1, v[K-1], N, v);
+    
+    return 0;
+}
