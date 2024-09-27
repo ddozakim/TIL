@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+long long dp[101]={0,};
+
+long long P(int n){
+    dp[1]=1;
+    dp[2]=1;
+    dp[3]=1;
+    if(dp[n]!=0){
+        return dp[n];
+    }
+    dp[n]=P(n-2)+P(n-3);
+    return dp[n];
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int T;
+    cin>>T;
+    for(int i=0;i<T;i++){
+        int N;
+        cin>>N;
+        cout<<P(N)<<"\n";
+    }
+    
+    
+    return 0;
+}
