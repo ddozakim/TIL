@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+   
+    int n;
+    cin>>n;
+    
+    vector<int> v(n);
+    for(int i=0; i<n;i++){
+        cin>>v[i];
+    }
+    
+     // 동적 계획법(DP)으로 최대 연속 부분합 구하기 (카데인 알고리즘)
+    int result = v[0];  // 최대 합
+    int current_sum = v[0];  // 현재까지의 부분합
+    
+    for (int i = 1; i < n; i++) {
+        current_sum = max(v[i], current_sum + v[i]);  // 현재 값을 더하거나, 새로운 구간 시작
+        result = max(result, current_sum);  // 최대값 갱신
+    }
+    
+    cout<<result;
+    
+    return 0;
+}
