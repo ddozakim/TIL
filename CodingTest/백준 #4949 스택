@@ -1,1 +1,61 @@
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+void Check(string s){
+   stack<char> st;
+
+    for (int i = 0; i < s.size(); i++) {
+        char c = s[i];
+        // 여는 괄호는 스택에 넣는다.
+        if (c == '(' || c == '[') {
+            st.push(c);
+        }
+        // 닫는 괄호는 스택의 맨 위와 짝이 맞는지 확인한다.
+        else if (c == ')') {
+            if (!st.empty() && st.top() == '(') {
+                st.pop();  // 짝이 맞으면 스택에서 제거
+            } else {
+                cout << "no" << "\n";
+                return;
+            }
+        }
+        else if (c == ']') {
+            if (!st.empty() && st.top() == '[') {
+                st.pop();  // 짝이 맞으면 스택에서 제거
+            } else {
+                cout << "no" << "\n";
+                return;
+            }
+        }
+    }
+
+    // 모든 괄호를 처리한 후 스택이 비어 있으면 올바른 괄호
+    if (st.empty()) {
+        cout << "yes" << "\n";
+    } else {
+        cout << "no" << "\n";
+    }
+}
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+     while (true) {
+        string s;
+        getline(cin, s);  // 문장을 한 줄 입력받는다.
+
+        // 종료 조건 (문장이 '.'만 있을 때 종료)
+        if (s == ".") {
+            break;
+        }
+
+        // 괄호 검사를 수행
+        Check(s);
+    }
+    return 0;
+}
 
