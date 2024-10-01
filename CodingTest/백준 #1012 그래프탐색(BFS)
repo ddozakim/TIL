@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <queue>
+using namespace std;
+
+int arr[51][51]={0};
+bool visited[51][51]={0};
+int dx[4]={1,-1,0,0};
+int dy[4]={0,0,1,-1};
+int M,N,K;
+int cnt=0;
+
+void BFS(int x, int y){
+    queue<pair<int,int>> q;
+    q.push({x,y});
+    visited[x][y]=true;
+    
+    while(!q.empty()){
+        int X=q.front().first;
+        int Y=q.front().second;
+        q.pop();
+        for(int i=0;i<4;i++){
+            int nx= X+dx[i];
+            int ny=Y+dy[i];
+            if(nx<0||nx>=M ||ny<0||ny>=N) continue;
+            if(arr[nx][ny]==0) continue;
+            if(visited[nx][ny]==false&&arr[nx][ny]==1){
+                q.push({nx,ny});
+                visited[nx][ny]=true;
+            }
+        }    
+    }
+}
+
+void Init()
+{
+    for(int i=0; i<M;i++){
+        for(int j=0;j<N;j++){
+            visited[i][j]=false;
+            arr[i][j]=0;
+        }
+    }
+}
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int T;
+    cin>>T;
+    for(int i=0; i<T;i++){
+        cin>>M>>N>>K;
+        cnt=0;
+        Init(); //배열, 방문 여부 모두 초기화
+        for(int j=0; j<K;j++){
+            int x,y;
+            cin>>x>>y;
+            arr[x][y]=1;
+        }
+        for(int w=0; w<M;w++){
+            for(int h=0;h<N;h++){
+                if(arr[w][h]==1 &&visited[w][h]==false){
+                    BFS(w,h);
+                    cnt++;
+                }
+            }
+        }
+        cout<<cnt<<"\n";
+    }
+    
+    
+    return 0;
+}
