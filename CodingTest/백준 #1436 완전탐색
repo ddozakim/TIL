@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n,m;
+    cin>>n;
+    int count=0;
+    int number=666;
+    while(true){
+        if(to_string(number).find("666")!=string::npos){
+            count++;
+        }
+         if (count == n) {
+            cout << number << endl;
+            break;
+        }
+        number++;
+    }
+    
+    
+  
+    
+    return 0;
+}
