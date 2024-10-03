@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> tree[100001]; 
+int parent[100001]; // 부모 노드를 저장하는 배열
+
+// DFS로 트리 탐색하며 부모 노드 찾기
+void dfs(int node, int par) {
+    parent[node] = par; // 현재 노드의 부모를 저장
+    for (int next : tree[node]) {
+        if (next != par) { // 부모로 되돌아가는 것을 방지
+            dfs(next, node); // 다음 노드 탐색
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n;
+    cin >> n;
+    
+    for (int i = 1; i < n; i++) {
+        int x, y;
+        cin >> x >> y;
+        tree[x].push_back(y);
+        tree[y].push_back(x); 
+    }
+    
+    dfs(1, 0);
+    
+    for (int i = 2; i <= n; i++) {
+        cout << parent[i] << '\n';
+    }
+    
+    return 0;
+}
