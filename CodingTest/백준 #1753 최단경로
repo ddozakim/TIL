@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#define INF 1e9 // 무한을 의미하는 값으로 10억을 설정
+
+using namespace std;
+
+int V,E,K;
+vector<pair<int, int>> graph[20001]; 
+int dist[20001]; // 시작점으로부터의 최단 거리 배열
+
+void dijkstra(int start){
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    dist[start]=0;//시작점의 거리는 0으로 설정
+    pq.push({0,start});// {거리, 정점}
+    
+    while(!pq.empty()){
+        int d = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+        
+        if(dist[now]<d) continue;
+        
+        for(auto edge : graph[now]){
+            int next = edge.first;
+            int cost = edge.second;
+            
+            if(dist[next]>dist[now]+cost){
+                dist[next]=dist[now]+cost;
+                pq.push({dist[next],next});
+            }
+        }
+    }
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>V>>E>>K;
+    
+    // 최단 거리 배열을 INF로 초기화
+    fill(dist, dist + V + 1, INF); 
+    
+    for(int i=0; i<E;i++){
+        int u,v,w;
+        cin>>u>>v>>w;
+        graph[u].push_back({v,w});
+    }
+    
+    dijkstra(K);
+    
+    for(int i=1;i<=V;i++){
+        if(dist[i]==INF) cout<<"INF"<<"\n";
+        else cout<<dist[i]<<"\n";
+    }
+    
+     
+    return 0;
+}
