@@ -1,0 +1,34 @@
+#include <iostream>
+#include <map>
+using namespace std;
+
+map<string,bool> m;
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    m["ChongChong"]=true;
+    int count=1;
+    int n;
+    cin>>n;
+    for(int i=0; i<n;i++){
+        string a,b;
+        cin>>a>>b;
+        if(m.find(a)==m.end()) m[a]=false;
+        if(m.find(b)==m.end()) m[b]=false;
+        if(m[a]==true && m[b]==false){
+            m[b]=true;
+            count++;
+        }
+        if(m[a]==false && m[b]==true){
+            m[a]=true;
+            count++;
+        }
+        
+    }
+    cout<<count;
+    return 0;
+}
