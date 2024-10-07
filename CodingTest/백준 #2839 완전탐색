@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int N;
+    cin>>N;
+    int i=0;
+    int j=0;
+    int sum=0;
+    int min=10000;
+    int cnt=0;
+    bool hasAnswer=false;
+    while(true){
+        if(i*3>N) break;
+        while(true){
+            sum=i*3+j*5;
+            if(sum<N){ j++; cnt++;}
+            else if(sum==N && min > cnt) {
+                min=cnt;
+                hasAnswer=true;
+            }
+            else break;
+        }
+        i++;
+        cnt=i;
+        sum=0;
+        j=0;
+    }
+    if(hasAnswer) cout<<min;
+    else cout<<-1;
+
+    return 0;
+}
