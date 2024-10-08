@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+string reverse(int x){
+    string s="";
+    while(x>0){
+        s+=to_string(x%10);
+        x/=10;
+    }
+    return s;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+   
+    int A,B;
+    cin>>A>>B;
+    A=stoi(reverse(A));
+    B=stoi(reverse(B));
+    
+    cout<<max(A,B);
+
+    return 0;
+}
