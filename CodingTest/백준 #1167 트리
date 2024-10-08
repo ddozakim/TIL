@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<pair<int,int>> tree[100001];
+int V;
+bool visited[100001];
+int max_dist=0;
+int farthest_node =0;
+
+void DFS(int node, int dist){
+    
+    visited[node]=true;
+    
+    if(dist>max_dist){
+        max_dist=dist;
+        farthest_node=node;
+    }
+    
+    for(int i=0; i<tree[node].size();i++){
+        int next = tree[node][i].first;
+        int weight = tree[node][i].second;
+        if(!visited[next]){
+            DFS(next,dist+weight);
+        }
+    }
+   
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+   
+    cin>>V;
+    for(int i=0; i<V;i++){
+        int from, to, d;
+        cin>>from;
+        while(true){
+            cin>>to;
+            if(to==-1) break;
+            cin>>d;   
+            tree[from].push_back({to, d});
+        }
+    }
+    
+    // 임의의 노드(1번 노드)에서 가장 먼 노드를 찾는다.
+    fill(visited, visited + V + 1, false);
+    DFS(1, 0);
+
+    // 그 노드에서 가장 먼 노드를 찾는다.
+    fill(visited, visited + V + 1, false);
+    max_dist = 0;
+    DFS(farthest_node, 0);
+    
+    cout<<max_dist;
+    
+    return 0;
+}
