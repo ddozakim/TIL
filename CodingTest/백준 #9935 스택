@@ -1,0 +1,54 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+string explosion;
+stack<char> s;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+   
+    string st, explosion;
+    cin >> st >> explosion;
+    int expSize = explosion.size();
+    
+    // 새로운 문자열을 저장할 벡터 (스택처럼 동작)
+    vector<char> result;
+    
+    for (int i = 0; i < st.size(); i++) {
+        result.push_back(st[i]); // 문자를 하나씩 벡터에 저장
+        
+        // 스택의 상위 부분에서 explosion을 찾는지 검사
+        if (result.size() >= expSize) {
+            bool isMatch = true;
+            // result의 끝부분이 explosion과 일치하는지 확인
+            for (int j = 0; j < expSize; j++) {
+                if (result[result.size() - expSize + j] != explosion[j]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            
+            // explosion과 일치하면 그 부분을 삭제
+            if (isMatch) {
+                for (int j = 0; j < expSize; j++) {
+                    result.pop_back(); // explosion 길이만큼 제거
+                }
+            }
+        }
+    }
+    
+    // 결과 출력
+    if (result.empty()) {
+        cout << "FRULA" << '\n';
+    } else {
+        for (char c : result) {
+            cout << c;
+        }
+        cout << '\n';
+    }    
+    return 0;
+}
