@@ -1,0 +1,52 @@
+#include <iostream>
+#include <queue>
+#define INF 1e9
+using namespace std;
+
+int N,K;
+int fastest_time[100001];
+
+int dijkstra(int start){
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,start});
+    fastest_time[start]=0;
+    while(!pq.empty()){
+        
+        int d=pq.top().first;
+        int now=pq.top().second;
+        pq.pop();
+        
+        if(now==K) return fastest_time[K];
+        
+        if(fastest_time[now]<d) continue;
+        
+        if(now-1>=0 && fastest_time[now-1]>fastest_time[now]+1 ){
+            fastest_time[now-1]=fastest_time[now]+1;
+            pq.push({fastest_time[now-1],now-1});
+        }
+        
+        if(now+1<=100000 && fastest_time[now+1]>fastest_time[now]+1 ){
+            fastest_time[now+1]=fastest_time[now]+1;
+            pq.push({fastest_time[now+1],now+1});
+        }
+        
+        if(now*2<=100000 && fastest_time[now*2]>fastest_time[now] ){
+            fastest_time[now*2]=fastest_time[now];
+            pq.push({fastest_time[now*2],now*2});
+        }
+        
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+   
+    cin >> N>>K;
+    fill(fastest_time,fastest_time+100001,INF);
+    
+    cout<<dijkstra(N);
+    
+    return 0;
+}
