@@ -1,0 +1,96 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#define MAX 100001
+#define INF 1e9
+
+using namespace std;
+
+int T;
+int n, m, t;
+int s, g, h;
+vector<pair<int, int>> graph[MAX];
+vector<int> destination;
+
+vector<int> dijkstra(int start) {
+    vector<int> dist(n + 1, INF);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    dist[start] = 0;
+    pq.push({0, start});
+
+    while (!pq.empty()) {
+        int d = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+
+        if (d > dist[now]) continue;
+
+        for (auto edge : graph[now]) {
+            int next = edge.first;
+            int weight = edge.second;
+            if (dist[next] > dist[now] + weight) {
+                dist[next] = dist[now] + weight;
+                pq.push({dist[next], next});
+            }
+        }
+    }
+    return dist;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> T;
+    while (T--) {
+        cin >> n >> m >> t;
+        cin >> s >> g >> h;
+
+        for (int i = 1; i <= n; i++) {
+            graph[i].clear(); // 그래프 초기화
+        }
+        destination.clear(); // 목적지 초기화
+
+        for (int i = 0; i < m; i++) {
+            int a, b, d;
+            cin >> a >> b >> d;
+            graph[a].push_back({b, d});
+            graph[b].push_back({a, d});
+        }
+
+        for (int i = 0; i < t; i++) {
+            int x;
+            cin >> x;
+            destination.push_back(x);
+        }
+
+        // 다익스트라 실행: 출발점 s, g, h에서 각각 계산
+        vector<int> dist_s = dijkstra(s);
+        vector<int> dist_g = dijkstra(g);
+        vector<int> dist_h = dijkstra(h);
+
+        vector<int> result;
+
+        for (int d : destination) {
+            int s_to_d = dist_s[d];
+            // s -> g -> h -> d 또는 s -> h -> g -> d 경로
+            int s_g_h_d = dist_s[g] + dist_g[h] + dist_h[d];
+            int s_h_g_d = dist_s[h] + dist_h[g] + dist_g[d];
+
+            // g와 h를 반드시 거친 경로가 최단 경로인 경우만 결과에 추가
+            if (s_to_d == s_g_h_d || s_to_d == s_h_g_d) {
+                result.push_back(d);
+            }
+        }
+
+        // 결과 정렬 후 출력
+        sort(result.begin(), result.end());
+        for (int r : result) {
+            cout << r << " ";
+        }
+        cout << "\n";
+    }
+
+    return 0;
+}
