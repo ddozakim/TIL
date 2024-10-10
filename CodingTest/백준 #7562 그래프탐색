@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#define MAX 301
+#define INF 1e9
+
+using namespace std;
+
+int n;
+int start_x, start_y;
+int end_x, end_y;
+int dist[MAX][MAX]; // 이동 횟수
+int dx[8] = {-1, -2, -2, -1, 1, 2, 2, 1};  // 나이트의 이동 방향 (x)
+int dy[8] = {-2, -1, 1, 2, 2, 1, -1, -2};  // 나이트의 이동 방향 (y)
+
+int BFS(int x, int y) {
+    queue<pair<int, int>> q;
+    dist[x][y] = 0;
+    q.push({x, y});
+    
+    while (!q.empty()) {
+        int nx = q.front().first;
+        int ny = q.front().second;
+        q.pop();
+        
+        // 목표지점 도달 시
+        if (nx == end_x && ny == end_y) {
+            return dist[nx][ny];
+        }
+        
+        // 나이트의 8가지 이동 경로 확인
+        for (int i = 0; i < 8; i++) {
+            int next_x = nx + dx[i];
+            int next_y = ny + dy[i];
+            
+            // 경계 검사 및 방문하지 않은 경우
+            if (next_x >= 0 && next_x < n && next_y >= 0 && next_y < n && dist[next_x][next_y] == INF) {
+                q.push({next_x, next_y});
+                dist[next_x][next_y] = dist[nx][ny] + 1;
+            }
+        }
+    }
+    
+    return -1;  // 도달할 수 없는 경우
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int T; // 테스트 케이스 수
+    cin >> T;
+    
+    while (T--) {
+        cin >> n;  // 체스판 크기
+        cin >> start_x >> start_y;  // 시작 좌표
+        cin >> end_x >> end_y;      // 목표 좌표
+        
+        // dist 배열 초기화
+        for (int i = 0; i < n; i++) {
+            fill(dist[i], dist[i] + n, INF);
+        }
+        
+        cout << BFS(start_x, start_y) << "\n";
+    }
+
+    return 0;
+}
