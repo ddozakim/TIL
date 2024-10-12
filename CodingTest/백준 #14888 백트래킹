@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define MAX 1000000000
+
+using namespace std;
+
+int n;  
+vector<int> numbers;  // 주어진 수열
+int operators[4];      // 연산자의 개수 (덧셈, 뺄셈, 곱셈, 나눗셈)
+int maxResult = -MAX;  // 결과의 최댓값
+int minResult = MAX;  // 결과의 최솟값
+
+void backtrack(int depth, int currentValue) {
+
+    if (depth == n) {
+        maxResult = max(maxResult, currentValue);
+        minResult = min(minResult, currentValue);
+        return;
+    }
+
+    // 각 연산자 사용
+    for (int i = 0; i < 4; i++) {
+        if (operators[i] > 0) { 
+            operators[i]--;  // 연산자 사용
+            
+            int nextValue = currentValue;
+            switch (i) {
+                case 0:  // 덧셈
+                    nextValue += numbers[depth];
+                    break;
+                case 1:  // 뺄셈
+                    nextValue -= numbers[depth];
+                    break;
+                case 2:  // 곱셈
+                    nextValue *= numbers[depth];
+                    break;
+                case 3:  // 나눗셈 
+                    if (nextValue < 0) {  // 음수일 경우 
+                        nextValue = -(-nextValue / numbers[depth]);
+                    } else {
+                        nextValue /= numbers[depth];
+                    }
+                    break;
+            }
+
+            backtrack(depth + 1, nextValue);
+
+            // 사용한 연산자 복구
+            operators[i]++;
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n;
+    numbers.resize(n);
+    for (int i = 0; i < n; i++) {
+        cin >> numbers[i];
+    }
+    for (int i = 0; i < 4; i++) {
+        cin >> operators[i];
+    }
+
+    
+    backtrack(1, numbers[0]);
+
+    cout << maxResult << '\n';
+    cout << minResult << '\n';
+
+    return 0;
+}
