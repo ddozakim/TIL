@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#define MAX 1000000000
+
+using namespace std;
+
+int n;
+int team[21][21];
+bool visited[21];
+int minDifference = MAX;
+
+void calculateScore(){
+    int team1=0;
+    int team2=0;
+    
+    for(int i=0;i<n;i++){
+        for(int j=0; j<n;j++){
+            if(visited[i]&&visited[j]){
+                team1+=team[i][j];   
+            }
+            else if(!visited[i]&&!visited[j]){
+                team2+=team[i][j];
+            }
+        }
+    }
+    minDifference=min(minDifference, abs(team1-team2));
+}
+
+void BT(int depth, int start){
+    
+    if(depth==n/2){
+        calculateScore();
+        return;
+    }
+    
+    for(int i=start; i<n;i++){
+    
+        if(!visited[i]){
+            visited[i]=true;
+            BT(depth+1,i+1);
+            visited[i]=false;
+        }
+        
+    }
+
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n;
+    for(int i=0; i<n;i++){
+        for(int j=0;j<n;j++){
+            cin>>team[i][j];
+        }
+    }
+    BT(0,0);
+    
+    cout<<minDifference;
+    
+    return 0;
+}
