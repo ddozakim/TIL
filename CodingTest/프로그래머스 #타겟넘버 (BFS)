@@ -1,0 +1,30 @@
+#include <string>
+#include <vector>
+#include <queue>
+using namespace std;
+
+int solution(vector<int> numbers, int target) {
+   int answer = 0;
+    int n = numbers.size();
+
+    // 큐에 현재까지 계산한 값과 깊이(탐색 단계)를 저장
+    queue<pair<int, int>> q;
+    q.push({0, 0});  // (sum, depth) 초기값
+
+    while (!q.empty()) {
+        int sum = q.front().first;
+        int depth = q.front().second;
+        q.pop();
+
+        // 모든 숫자를 다 사용한 경우에만 타겟 값과 비교
+        if (depth == n) {
+            if (sum == target) answer++;
+        } else {
+            // 다음 숫자를 더하거나 빼는 두 가지 경우를 큐에 삽입
+            q.push({sum + numbers[depth], depth + 1});
+            q.push({sum - numbers[depth], depth + 1});
+        }
+    }
+
+    return answer;
+}
