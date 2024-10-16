@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+#include <numeric>   
+
+using namespace std;
+
+//모든 간격의 최대공약수(GCD)를 구하면, 해당 GCD가 최적의 간격이 된다
+
+int main() {
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
+
+    int N;
+    cin >> N;
+
+    vector<int> trees(N);
+    for (int i = 0; i < N; ++i) {
+        cin >> trees[i];
+    }
+
+    vector<int> distances(N - 1);
+    // 인접한 가로수 간의 간격 계산
+    for (int i = 0; i < N - 1; ++i) {
+        distances[i] = trees[i + 1] - trees[i];
+    }
+
+    // 모든 간격의 최대공약수(GCD) 계산
+    int g = distances[0];
+    for (int i = 1; i < N - 1; ++i) {
+        g = gcd(g, distances[i]); // std::gcd 사용
+    }
+
+    // 추가로 심어야 할 나무의 수 계산
+    int count = 0;
+    for (int i = 0; i < N - 1; ++i) {
+        count += (distances[i] / g) - 1;
+    }
+
+    cout << count << '\n';
+
+    return 0;
+}
