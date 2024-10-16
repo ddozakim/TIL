@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define INF 1e9  // 무한대 정의
+using namespace std;
+
+int V, E;
+int dist[401][401];  // 최단 거리 배열
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> V >> E;
+
+    // 초기화: 자기 자신으로의 거리는 0, 나머지는 INF
+    for (int i = 1; i <= V; ++i) {
+        for (int j = 1; j <= V; ++j) {
+            if (i == j) dist[i][j] = 0;
+            else dist[i][j] = INF;
+        }
+    }
+
+    // 도로 정보 입력
+    for (int i = 0; i < E; ++i) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        dist[a][b] = c;  // a에서 b로 가는 도로의 거리 저장
+    }
+
+    // 플로이드-워셜 알고리즘 수행
+    for (int k = 1; k <= V; ++k) {
+        for (int i = 1; i <= V; ++i) {
+            for (int j = 1; j <= V; ++j) {
+                if (dist[i][j] > dist[i][k] + dist[k][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+
+    // 최소 사이클 찾기
+    int answer = INF;
+    for (int i = 1; i <= V; ++i) {
+        for (int j = 1; j <= V; ++j) {
+            if (i == j ) continue;
+            answer = min(answer, dist[i][j] + dist[j][i]);
+        }
+    }
+
+    // 결과 출력
+    if (answer == INF) {
+        cout << -1 << '\n';  // 사이클이 없는 경우
+    } else {
+        cout << answer << '\n';  // 최소 사이클의 길이 출력
+    }
+
+    return 0;
+}
