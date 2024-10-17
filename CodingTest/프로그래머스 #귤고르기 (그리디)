@@ -1,0 +1,31 @@
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+//개수가 많은 귤의 종류를 먼저 선택하는 것이 최소 종류의 귤로 목표 개수를 채우는 데 유리
+//빈도수가 높은 순서대로 귤을 골라 목표 개수 k를 채울 때까지 반복
+
+using namespace std;
+
+int solution(int k, vector<int> tangerine) {
+    int answer = 0;
+    unordered_map<int, int> count;
+    for(auto size : tangerine){
+        count[size]++;
+    }
+    vector<int> v;
+    for(auto p : count){
+        v.push_back(p.second);
+    }
+    sort(v.begin(),v.end(),greater<int>());
+    
+    int kinds=0;
+    int total=0;
+    for(int i=0 ; i< v.size();i++){
+        total+=v[i];
+        kinds++;
+        if(total>=k) break;
+    }
+    
+    return kinds;
+}
