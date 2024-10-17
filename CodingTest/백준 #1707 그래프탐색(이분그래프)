@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+#define MAX 20001
+#define RED 2
+#define BLUE 3
+
+int visited[MAX];
+vector<int> graph[MAX];
+int V,E;
+
+void DFS(int start){
+    
+    if(visited[start]==0){
+        visited[start]=RED;
+    }
+    
+    for(int i=0; i< graph[start].size();i++)
+    {
+        int next=graph[start][i];
+        if(visited[next]==0)
+        {
+            if(visited[start]==RED){
+                visited[next]=BLUE;
+            }
+            else if (visited[start]==BLUE){
+                visited[next]=RED;
+            }
+            DFS(next);
+        }
+    }
+    
+}
+
+bool Check(){
+    
+    for(int i=1;i<=V;i++){
+        
+        for(int j=0; j< graph[i].size();j++)
+        {
+            int next = graph[i][j];
+            //이전 노드와 색깔이 같다면 이분그래프 아님 
+            if(visited[i]==visited[next]){ 
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int T;
+    cin>>T;
+    
+    while(T--){
+        
+        cin>>V>>E;
+        for(int i=0; i<E;i++){
+            int u,v;
+            cin>>u>>v;
+            graph[u].push_back(v);
+            graph[v].push_back(u);
+        }
+        
+        for(int i=1; i<=V;i++){
+            if(visited[i]==0) DFS(i);
+        }
+        
+        if(Check()) cout<<"YES\n";
+        else cout<<"NO\n";
+        
+        memset(visited,0,sizeof(visited));
+        memset(graph,0,sizeof(graph));
+    }
+    
+    
+    
+    return 0;
+}
