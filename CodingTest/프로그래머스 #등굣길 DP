@@ -1,0 +1,33 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+const int MOD = 1e9 + 7;  // 결과를 나눌 모듈러 값
+int dp[101][101];  // 경로 개수를 저장하는 DP 테이블
+bool IsPuddle[101][101];  // 물웅덩이 여부
+
+int solution(int m, int n, vector<vector<int>> puddles) {
+    // 물웅덩이를 표시
+    for ( auto p : puddles) {
+        int x = p[1], y = p[0];  // 주어진 좌표와 배열 인덱스 정렬 주의
+        IsPuddle[x][y] = true;
+    }
+
+    // 시작 지점 초기화
+    dp[1][1] = 1;
+
+    // DP 테이블 채우기
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            // 시작 지점이거나 물웅덩이는 건너뛴다
+            if ((i == 1 && j == 1) || IsPuddle[i][j]) continue;
+
+            // 위쪽과 왼쪽에서 오는 경로 개수를 더함
+            if (i > 1) dp[i][j] = (dp[i][j] + dp[i - 1][j]) % MOD;
+            if (j > 1) dp[i][j] = (dp[i][j] + dp[i][j - 1]) % MOD;
+        }
+    }
+
+    return dp[n][m];  // (n, m)까지 도달하는 경로의 수 반환
+}
