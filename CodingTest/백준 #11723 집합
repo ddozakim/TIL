@@ -1,0 +1,48 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int m;
+    cin>>m;
+    set<int> s;
+    
+    while(m--){
+        string str;
+        cin>>str;
+        int n;
+        if(str=="add"){
+            cin>>n;
+            s.insert(n);
+        }
+        else if(str=="remove"){
+            cin>>n;
+            if(s.find(n)!=s.end())
+                s.erase(n);
+        }
+        else if(str=="check"){
+            cin>>n;
+            if(s.find(n)!=s.end()) cout<<1<<"\n";
+            else cout<<0<<"\n";
+        }
+        else if(str=="toggle"){
+            cin>>n;
+             if(s.find(n)!=s.end()) s.erase(n);
+             else s.insert(n);
+        }
+        else if(str=="all"){
+            for(int i=1; i<=20;i++){
+                s.insert(i);
+            }
+        }
+        else if(str=="empty") {
+            s.clear();
+        }
+        
+    }
+    return 0;
+}
