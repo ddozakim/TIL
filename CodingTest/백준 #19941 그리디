@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int N,K;
+    cin>>N>>K;
+    
+    string str;
+    cin>>str;
+    vector<pair<char,int>> table(N+1); //문자, 방문여부
+    for(int i=0; i<=N;i++){
+        table[i].first=str[i];
+        table[i].second=0;
+    }
+    int answer=0;
+    for(int i=0; i<N;i++){
+        if(table[i].first=='H') continue;
+        else if(table[i].first=='P'){
+            for(int j=i-K; j<=i+K ;j++){
+                if(j<0||j>=N) continue;
+                if(table[j].first=='H' && table[j].second==0){
+                    table[j].second=1;
+                    answer++;
+                    break;
+                }
+            }
+        }
+    }
+    cout<<answer;
+    
+    return 0;
+}
+
