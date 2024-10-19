@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+
+bool compare(const  pair<string,int>& a, const  pair<string,int>& b) {
+	 // 출현 횟수가 더 많은 것이 우선
+    if (a.second != b.second) return a.second > b.second; 
+    // 출현 횟수가 같으면 단어 길이가 긴 것이 우선
+    if (a.first.size() != b.first.size()) return a.first.size() > b.first.size(); 
+    // 길이도 같으면 사전순으로 
+    return a.first < b.first; 
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int N, M;
+    cin>>N>>M;
+    
+    map<string,int> words;
+    for(int i=0;i<N;i++){
+        string str;
+        cin>>str;
+        if(str.size()>=M){
+            words[str]++;
+        }
+    }
+    
+    vector<pair<string,int>> v;
+    for(auto p : words){
+        v.push_back({p.first,p.second});
+    }
+    
+    sort(v.begin(),v.end(),compare);
+    
+    
+    for(auto p : v){
+        cout<< p.first <<"\n";
+    }
+    return 0;
+}
+
