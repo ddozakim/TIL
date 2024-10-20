@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+//핵심 : 사이클 찾기 !
+
+int N;
+bool visited[101];
+int arr[101];
+vector<int> answer;
+
+void DFS(int current, int start){
+    if(visited[current]){
+        if(start==current) answer.push_back(start);
+        return;
+    }
+    visited[current]=true;
+    DFS(arr[current],start);
+}
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin >> N;
+   
+    for(int i=1; i<=N;i++){
+        cin>>arr[i];
+    }
+    
+     for(int i=1; i<=N;i++){
+        memset(visited,0,sizeof(visited));
+        DFS(i,i);
+    }
+    
+    cout<<answer.size()<<"\n";
+    for(auto x : answer) cout<<x<<"\n";
+    return 0;
+}
+
