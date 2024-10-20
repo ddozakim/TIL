@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+//핵심 -> 각 위치의 좌우 최대 높이를 계산해 물이 고일 수 있는 양 구하기
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int H, W;
+    cin >> H >> W;
+
+    vector<int> height(W);
+    for (int i = 0; i < W; i++) {
+        cin >> height[i];
+    }
+
+    // 왼쪽과 오른쪽 최대 높이 배열 초기화
+    vector<int> leftMax(W), rightMax(W);
+
+    // 왼쪽에서 최대 높이 계산
+    leftMax[0] = height[0];
+    for (int i = 1; i < W; i++) {
+        leftMax[i] = max(leftMax[i - 1], height[i]);
+    }
+
+    // 오른쪽에서 최대 높이 계산
+    rightMax[W - 1] = height[W - 1];
+    for (int i = W - 2; i >= 0; i--) {
+        rightMax[i] = max(rightMax[i + 1], height[i]);
+    }
+
+    // 고인 물의 총량 계산
+    int totalWater = 0;
+    for (int i = 0; i < W; i++) {
+        totalWater += min(leftMax[i], rightMax[i]) - height[i];
+    }
+
+    cout << totalWater << '\n';
+    return 0;
+}
