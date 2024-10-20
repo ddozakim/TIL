@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+struct Player {
+    int level;
+    string nickname;
+};
+
+struct Room {
+    int minLevel, maxLevel;
+    vector<Player> players;
+    bool isStarted() const {
+        return players.size() == capacity;
+    }
+    static int capacity; // 방 정원
+};
+
+int Room::capacity = 0;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int p, m; // 플레이어 수 p, 방 정원 m
+    cin >> p >> m;
+    Room::capacity = m;
+
+    vector<Room> rooms; // 생성된 방 목록
+
+    // 플레이어 정보를 입력받고 처리
+    for (int i = 0; i < p; ++i) {
+        int level;
+        string nickname;
+        cin >> level >> nickname;
+
+        bool placed = false; // 플레이어가 방에 입장했는지 여부
+
+        // 이미 존재하는 방에 입장 가능한지 확인
+        for (auto& room : rooms) {
+            if (room.players.size() < m && level >= room.minLevel && level <= room.maxLevel) {
+                room.players.push_back({level, nickname});
+                placed = true;
+                break;
+            }
+        }
+
+        // 입장할 수 있는 방이 없으면 새로운 방 생성
+        if (!placed) {
+            Room newRoom;
+            newRoom.minLevel = level - 10;
+            newRoom.maxLevel = level + 10;
+            newRoom.players.push_back({level, nickname});
+            rooms.push_back(newRoom);
+        }
+    }
+
+    // 생성된 방의 상태를 출력
+    for (const auto& room : rooms) {
+        // 방의 상태 출력
+        if (room.isStarted()) {
+            cout << "Started!\n";
+        } else {
+            cout << "Waiting!\n";
+        }
+
+        // 방에 있는 플레이어들을 레벨과 닉네임 기준으로 정렬 후 출력
+        vector<Player> sortedPlayers = room.players;
+        sort(sortedPlayers.begin(), sortedPlayers.end(), [](const Player& a, const Player& b) {
+            return a.nickname < b.nickname;
+        });
+
+        for (const auto& player : sortedPlayers) {
+            cout << player.level << " " << player.nickname << "\n";
+        }
+    }
+
+    return 0;
+}
