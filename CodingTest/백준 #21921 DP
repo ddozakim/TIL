@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+long long dp[250000];
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int N,X;
+    cin>>N>>X;
+    vector<int> visitors(N);
+    
+    int zeroCount=0;
+    for(int i=0; i<N;i++){
+        cin>>visitors[i];
+        
+        if(i==0) dp[0]=visitors[i];
+        else if(i>0){
+            dp[i]= visitors[i]+dp[i-1];
+        }
+
+        if(visitors[i]==0) zeroCount++;
+    }
+    if(zeroCount==N){
+        cout<<"SAD";
+        exit(0);
+    }
+    
+    long long sum=0;
+    long long max_visitors=0;
+    int cnt=1;
+    for(int i=N-1 ; i>=X-1 ;i--){
+        sum= dp[i]-dp[i-X]+1;
+        if(sum==max_visitors){
+            cnt++;
+        }
+        else if(sum>max_visitors){
+            max_visitors=sum;
+            cnt=1;
+        }
+        sum=0;
+    }
+    
+    cout<<max_visitors-1<<"\n"<<cnt;
+  
+    
+    return 0;
+}
+
