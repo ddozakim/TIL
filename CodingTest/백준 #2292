@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    long long N;
+    cin>>N;
+    int result=1;
+    if(N==1){
+        cout<<result;
+        exit(0);
+    }
+    int i=0;
+    while(true){
+        result += 6*i;
+        if(N<=result){
+            cout<<i+1;
+            break;
+        }
+        i++;
+    }
+   
+    
+    return 0;
+}
+
