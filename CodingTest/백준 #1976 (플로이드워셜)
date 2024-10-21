@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+const int MAX = 201;
+int N, M;
+int connected[MAX][MAX];  // 연결 정보
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    // 도시 수와 여행 계획에 포함된 도시 수 입력
+    cin >> N >> M;
+
+    // 연결 정보 입력
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            cin >> connected[i][j];
+            if (i == j) connected[i][j] = 1;  // 자기 자신으로의 경로는 항상 가능
+        }
+    }
+
+    // 플로이드-와샬 알고리즘으로 모든 쌍에 대한 경로 계산
+    for (int k = 1; k <= N; k++) {  // 경유지
+        for (int i = 1; i <= N; i++) {  // 시작 도시
+            for (int j = 1; j <= N; j++) {  // 도착 도시
+                if (connected[i][k] && connected[k][j]) {
+                    connected[i][j] = 1;  // 경유지를 통해 연결 가능
+                }
+            }
+        }
+    }
+
+    // 여행 경로 입력
+    vector<int> route(M);
+    for (int i = 0; i < M; i++) {
+        cin >> route[i];
+    }
+
+    // 여행 계획의 인접한 도시들이 연결되어 있는지 확인
+    for (int i = 0; i < M - 1; i++) {
+        int from = route[i];
+        int to = route[i + 1];
+
+        if (connected[from][to] == 0) {  // 연결되지 않은 경우
+            cout << "NO\n";
+            return 0;
+        }
+    }
+
+    // 모든 경로가 연결된 경우
+    cout << "YES\n";
+    return 0;
+}
