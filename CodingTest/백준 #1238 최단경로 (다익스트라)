@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+#define INF 1e9  
+using namespace std;
+
+vector<vector<pair<int, int>>> graph;  
+
+vector<int> dijkstra(int start, int n) {
+    
+    vector<int> dist(n + 1, INF);  
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+
+    dist[start] = 0;
+    pq.push({0, start});  
+    
+    while (!pq.empty()) {
+        int d = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+
+        if (d > dist[now]) continue;
+
+        for (auto edge : graph[now]) {
+            int next = edge.first;
+            int weight = edge.second;
+            
+            if (dist[now]+weight < dist[next]) {
+                dist[next] = dist[now]+weight;
+                pq.push({dist[next], next});
+            }
+        }
+    }
+
+    return dist;
+}
+
+int main()
+{
+    int N, M, X;
+    cin >> N >> M >> X;
+
+    graph.resize(N + 1);  // 그래프 크기 설정
+
+    // 그래프 입력 받기
+    for (int i = 0; i < M; ++i) {
+        int u, v, t;
+        cin >> u >> v >> t;
+        graph[u].emplace_back(v, t);
+    }
+
+    // X에서 모든 마을로 가는 최단 거리 계산
+    vector<int> dist_from_x = dijkstra(X, N);
+
+    // 각 마을에서 X로 가는 최단 거리 계산
+    int max_time = 0;
+    for (int i = 1; i <= N; ++i) {
+        vector<int> dist_to_x = dijkstra(i, N);
+        int round_trip = dist_to_x[X] + dist_from_x[i];
+        max_time = max(max_time, round_trip);  // 최대 왕복 시간 갱신
+    }
+
+    cout << max_time << '\n';
+    
+    return 0;
+}
