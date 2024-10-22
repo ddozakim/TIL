@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int N;
+	cin >> N;
+
+	vector<int> building(N);
+	vector<int> cnt(N, 0);
+	
+	for(int i = 0; i < N; i++)
+		cin >> building[i];
+
+	for(int i = 0; i < N; i++){
+		double max_level = -9999999999;
+		for(int j = i + 1; j < N; j++){
+			double level = (double)(building[j] - building[i]) / (j - i);
+			if(level > max_level){
+				cnt[i]++;
+				cnt[j]++;
+				max_level = level;
+			}
+		}
+	}
+	
+    int result=0;
+	for(auto n : cnt)
+		result = max(result, n);
+	cout << result << '\n';
+        
+    
+    return 0;
+}
