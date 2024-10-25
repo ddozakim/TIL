@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    long long N,M;
+    cin>>N>>M;
+    vector<int> v(N);
+    for(int i=0; i<N;i++){
+        cin>>v[i];
+    }
+    
+    sort(v.begin(),v.end());
+    
+    int left = 0, right = 0;
+    long long min_difference = 1e18;
+    
+     while (right < N) {
+        long long current = v[right] - v[left];
+
+        // 차이가 M 이상인 경우 -> min_difference 갱신 및 left 이동
+        if (current >= M) {
+            min_difference = min(min_difference, current);
+            left++;
+
+            // left가 right를 넘어가면 right도 이동
+            if (left > right) {
+                right = left;
+            }
+        }
+        // 차이가 M 미만인 경우 -> right 이동
+        else {
+            right++;
+        }
+    }
+    
+    cout<<min_difference;
+    
+    
+    return 0;
+}
