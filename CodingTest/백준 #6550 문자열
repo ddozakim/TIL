@@ -1,0 +1,36 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    string s,t ;
+    queue<char> q;
+
+    while(cin>>s>>t){
+        
+        for(int i=0; i<s.size();i++){
+            q.push(s[i]);
+        }
+        
+        for(int i=0; i< t.size();i++){
+            if(q.front()==t[i]){
+                q.pop();
+            }
+        }
+        
+        if(q.empty()) cout<< "Yes"<<"\n";
+        else cout<<"No"<<"\n";
+         
+        while(!q.empty()){
+            q.pop();
+        }
+       
+    }
+    return 0;
+}
