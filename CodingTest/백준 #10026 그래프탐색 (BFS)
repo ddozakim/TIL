@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+int N;
+bool visited[101][101];
+string arr[101];
+int dx[4] = {1,-1,0,0};
+int dy[4] ={0,0,1,-1};
+
+void BFS(int x, int y){
+    queue<pair<int,int>> q;
+    q.push({x,y});
+    visited[x][y]=true;
+    char color = arr[x][y];
+    
+    while(!q.empty()){
+        int a = q.front().first;
+        int b = q.front().second;
+        q.pop();
+        
+        for(int i=0; i<4; i++){
+            int nx = a+dx[i];
+            int ny = b+dy[i];
+            
+            if(nx<0|| ny<0|| nx>=N ||ny>=N) continue;
+            if(!visited[nx][ny] && arr[nx][ny] == color){
+                visited[nx][ny]=true;
+                q.push({nx,ny});
+            }
+        }
+    }
+}
+
+
+void BFS2(int x, int y){
+    queue<pair<int,int>> q;
+    q.push({x,y});
+    visited[x][y]=true;
+    char color = arr[x][y];
+    
+    while(!q.empty()){
+        int a = q.front().first;
+        int b = q.front().second;
+        q.pop();
+        
+        for(int i=0; i<4; i++){
+            int nx = a+dx[i];
+            int ny = b+dy[i];
+            
+            if(nx<0|| ny<0|| nx>=N ||ny>=N) continue;
+            if(!visited[nx][ny] ){
+                if(color=='B' && arr[nx][ny]=='B'){
+                    visited[nx][ny]=true;
+                    q.push({nx,ny});
+                }
+                else if(color=='R' || color == 'G'){
+                    if(arr[nx][ny]=='R'||arr[nx][ny]=='G'){
+                        visited[nx][ny]=true;
+                        q.push({nx,ny});    
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>N;
+    for(int i=0; i<N;i++){
+        cin>>arr[i];
+    }
+    
+    //일반
+    int cnt=0;
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N ; j++){
+            if(!visited[i][j]){
+                BFS(i,j);
+                cnt++;
+            }
+        }
+    }
+    //적록색약
+    int cnt2=0;
+    memset(visited,0,sizeof(visited));
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N ; j++){
+            if(!visited[i][j]){
+                BFS2(i,j);
+                cnt2++;
+            }
+        }
+    }
+    
+    
+    cout<<cnt<<" "<<cnt2;
+    
+    return 0;
+}
