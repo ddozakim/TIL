@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#define INF 1e9  // 무한대 정의
+using namespace std;
+
+int N, M;
+vector<pair<int,int>> graph[1001];
+int from, to;
+int dist[1001];
+
+void dijstra(int start){
+    priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+    pq.push({0,start});
+    dist[start]=0;
+    
+    while(!pq.empty()){
+        int d= pq. top().first;
+        int now = pq.top().second;
+        pq.pop();
+        
+        if(dist[now]<d) continue;
+        for(auto edge : graph[now]){
+            int next = edge.first;
+            int weight = edge.second;
+            
+            if(dist[next]> dist[now]+weight){
+                dist[next]= dist[now]+weight;
+                pq.push({dist[next],next});
+            }
+        }
+        
+    }
+}
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>N>>M;
+    
+    for(int i=0; i<M;i++){
+        int a,b,c;
+        cin>>a>>b>>c;
+        graph[a].push_back({b,c});
+    }
+    
+    cin>>from>>to;
+    fill(dist,dist+N+1, INF);
+    dijstra(from);
+    
+    cout<<dist[to];
+    
+    return 0;
+}
