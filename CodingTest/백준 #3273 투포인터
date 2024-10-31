@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n,x;
+    cin>>n;
+    vector<int> v(n);
+    
+    for(int i=0; i<n;i++){
+        cin>>v[i];
+    }
+    cin>>x;
+    sort(v.begin(),v.end());
+    
+    int left=0;
+    int right = v.size()-1;
+    int answer=0;
+    
+
+    while(left<right){
+        if(v[left]+v[right]==x){
+            answer++;
+            left++;
+            right--;
+        }        
+        else if(v[left]+v[right]<x){
+            left++;
+        }
+        else if(v[left]+v[right]>x){
+            right--;
+        }
+    }
+    cout<<answer;
+    
+    
+    return 0;
+}
