@@ -1,0 +1,45 @@
+#include <string>
+#include <vector>
+#include <queue>
+#define MAX 1000000
+
+using namespace std;
+
+bool visited[MAX+1];
+
+int BFS(int x , int y , int n){
+    queue<pair<int,int>> q;
+    q.push({x,0}); // 누적 값, 횟수
+    visited[x]=true;
+    while(!q.empty()){
+        int now = q.front().first;
+        int cnt = q.front().second;
+        q.pop();
+        
+        if(now==y) return cnt;
+        
+        int a = now+n;
+        if(!visited[a] && a<=MAX) {
+            q.push({a,cnt+1});
+            visited[a]= true;
+        }
+        int b= now*2;
+        if(!visited[b]&& b<=MAX) {
+            visited[b] = true;
+            q.push({b,cnt+1});
+        }
+        
+        int c= now*3;
+        if(!visited[c]&& c<=MAX){
+            visited[c] =true;
+            q.push({c,cnt+1});
+        }
+
+    }
+    return -1;
+    
+}
+
+int solution(int x, int y, int n) {
+    return BFS(x,y,n);
+}
