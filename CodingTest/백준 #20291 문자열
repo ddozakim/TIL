@@ -1,0 +1,35 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+map<string,int> list;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n;
+    cin>>n;
+    
+    while(n--){
+        string str;
+        cin>>str;
+        bool shouldSave =false;
+        string name;
+        for(int i=0; i<str.size();i++){
+               if(str[i]=='.') shouldSave=true;
+               else if(shouldSave){
+                   name+=str[i];
+               }
+        }
+        list[name]++;
+    }
+    
+    for(auto x : list){
+        cout<<x.first<<" "<<x.second<<"\n";
+    }
+    
+    return 0;
+}
