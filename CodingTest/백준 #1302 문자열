@@ -1,0 +1,46 @@
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+using namespace std;
+
+map<string,int> list;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n;
+    cin>>n;
+    
+    while(n--){
+        string str;
+        cin>>str;
+        list[str]++;
+    }
+    priority_queue<pair<int,string>> pq;
+    
+    for(auto p : list){
+        pq.push({p.second,p.first});
+    }
+    
+    set<string> answer;
+    answer.insert(pq.top().second);
+    int max_cnt=pq.top().first;
+    pq.pop();
+    while(max_cnt==pq.top().first){
+        answer.insert(pq.top().second);
+        pq.pop();
+    }
+    int i=0;
+    for(auto p : answer){
+        if(i!=0) break;
+        cout<<p<<"\n";
+        i++;
+        
+    }
+    
+    
+    return 0;
+}
