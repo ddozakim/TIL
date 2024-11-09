@@ -1,0 +1,24 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+    string s;
+    cin >> s;
+    int size = s.size();
+    vector<int> word(26, -1); // 크기 26의 배열을 -1로 초기화
+
+    for (int i = 0; i < size; i++) {
+        int index = s[i] - 'a';
+        if (word[index] == -1) {
+            word[index] = i;
+        }
+    }
+
+    for (int i = 0; i < 26; i++) {
+        cout << word[i] << " ";
+    }
+
+    return 0;
+}
