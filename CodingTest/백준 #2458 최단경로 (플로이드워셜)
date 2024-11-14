@@ -1,0 +1,52 @@
+#include <iostream>
+#define MAX 501
+#define INF 1e9
+
+using namespace std;
+
+int N, M;
+int map[MAX][MAX];
+ 
+void floyd() {
+    for (int k = 1; k <= N; k++) {
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                if (map[i][j] > map[i][k] + map[k][j]) {
+                    map[i][j] = map[i][k] + map[k][j];
+                }
+            }
+        }
+    }
+}
+ 
+int main() {
+    cin >> N >> M;
+ 
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            map[i][j] = INF;
+        }
+    }
+ 
+    for (int i = 0; i < M; i++) {
+        int a, b;
+        cin >> a >> b;
+        map[a][b] = 1;
+    }
+ 
+    floyd();
+ 
+    int ans = 0;
+    for (int i = 1; i <= N; i++) {
+        int cnt = 0;
+        for (int j = 1; j <= N; j++) {
+            if (map[i][j] != INF || map[j][i] != INF) { 
+                cnt++; // i보다 큰 사람이 존재 or i보다 작은 사람이 존재하면
+            }
+        }
+        if (cnt == N - 1) ans++; // i가 자신을 제외한 모든 정점과 연결됨
+    }
+    cout << ans << endl;
+ 
+    return 0;
+}
