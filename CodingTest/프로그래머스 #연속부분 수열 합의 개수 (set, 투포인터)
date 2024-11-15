@@ -1,0 +1,52 @@
+#include <string>
+#include <vector>
+#include <unordered_setset>
+using namespace std;
+
+//투포인터 풀이
+int solution(vector<int> elements) {
+    int answer = 0;
+    
+    int left=0;
+    int right =0;
+    int size = elements.size();
+    unordered_set<int> list;
+    while(left<size){
+        int sum=0;
+        int cnt =0;
+        right=left;
+        while(cnt!=size){
+            sum+=elements[right];
+            list.insert(sum);
+            right++;
+            cnt++;
+            if(right>=size) right=0;
+        }
+        left++;
+    }
+    answer = list.size();
+    return answer;
+}
+
+---------------------------------------------------------------------------------------------------------------
+#include <string>
+#include <vector>
+#include <set>
+
+using namespace std;
+//최적화 코드
+int solution(vector<int> elements) {
+    set<int> S;
+
+    int n = elements.size();
+
+    for (int i = 0 ; i < n ; ++i) {
+        int sum = 0;
+        for (int j = i ; j < i + n ; ++j) {
+          sum += elements[j % n]; //나머지 연산자 활용하기
+            S.insert(sum);
+        }
+    }
+
+    return S.size();
+}
