@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+
+int n, m;
+string arr[51];
+bool visited[51][51];
+int dx[4] = {1, -1, 0, 0};
+int dy[4] = {0, 0, 1, -1};
+
+int bfs(int startX, int startY) {
+    queue<pair<pair<int, int>, int>> q;
+    memset(visited, false, sizeof(visited));
+    q.push({{startX, startY}, 0});
+    visited[startX][startY] = true;
+
+    int maxDist = 0;
+
+    while (!q.empty()) {
+        int x = q.front().first.first;
+        int y = q.front().first.second;
+        int dist = q.front().second;
+        q.pop();
+
+        maxDist = max(maxDist, dist);
+
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if (nx < 0 || ny < 0 || nx >= n || ny >= m || arr[nx][ny] == 'W') continue;
+            if (!visited[nx][ny]) {
+                visited[nx][ny] = true;
+                q.push({{nx, ny}, dist + 1});
+            }
+        }
+    }
+
+    return maxDist;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n >> m;
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    int maxDist = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (arr[i][j] == 'L') {
+                maxDist = max(maxDist, bfs(i, j));
+            }
+        }
+    }
+
+    cout << maxDist << "\n";
+    return 0;
+}
