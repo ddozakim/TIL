@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+int n, m;
+string arr[1500];
+bool swanVisited[1500][1500];
+bool iceVisited[1500][1500];
+queue<pair<int, int>> swanQueue, swanNextQueue;
+queue<pair<int, int>> iceQueue, iceNextQueue;
+int dx[4] = {1, -1, 0, 0};
+int dy[4] = {0, 0, 1, -1};
+pair<int, int> swans[2];
+
+bool canMeet() {
+    while (!swanQueue.empty()) {
+        auto [x, y] = swanQueue.front();
+        swanQueue.pop();
+
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i], ny = y + dy[i];
+            if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if (swanVisited[nx][ny]) continue;
+
+            swanVisited[nx][ny] = true;
+            if (arr[nx][ny] == 'L') return true; // 백조가 만나는 경우
+            if (arr[nx][ny] == '.') {
+                swanQueue.push({nx, ny}); // 물이면 이동 가능
+            } else {
+                swanNextQueue.push({nx, ny}); // 얼음이면 다음 단계에서 탐색
+            }
+        }
+    }
+    return false;
+}
+
+void meltIce() {
+    while (!iceQueue.empty()) {
+        auto [x, y] = iceQueue.front();
+        iceQueue.pop();
+
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i], ny = y + dy[i];
+            if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if (iceVisited[nx][ny]) continue;
+
+            if (arr[nx][ny] == 'X') {
+                arr[nx][ny] = '.'; // 얼음 녹임
+                iceNextQueue.push({nx, ny});
+            }
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n >> m;
+    int swanIdx = 0;
+
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+        for (int j = 0; j < m; j++) {
+            if (arr[i][j] == 'L') {
+                swans[swanIdx++] = {i, j};
+                swanQueue.push({i, j});
+                swanVisited[i][j] = true;
+            }
+            if (arr[i][j] == '.' || arr[i][j] == 'L') {
+                iceQueue.push({i, j});
+                iceVisited[i][j] = true;
+            }
+        }
+    }
+
+    int days = 0;
+    while (true) {
+        if (canMeet()) {
+            cout << days << '\n';
+            return 0;
+        }
+
+        meltIce();
+
+        swap(swanQueue, swanNextQueue);
+        swap(iceQueue, iceNextQueue);
+        days++;
+    }
+
+    return 0;
+}
