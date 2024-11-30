@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+
+#define INF 1e9
+
+int T;
+int n, d, c;
+vector<pair<int, int>> v[10001];
+int dist[10001];
+int cnt, FinalInfectionTime;
+bool infected[10001];
+
+void dijkstra() {
+    fill(dist, dist + 10001, INF);
+    fill(infected, infected + 10001, false);
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, c});
+    infected[c] = true;
+    dist[c] = 0;
+
+    while (!pq.empty()) {
+        int t = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+
+        if (t > dist[now]) continue;
+
+        for (auto edge : v[now]) {
+            int next = edge.first;
+            int spreadTime = edge.second;
+            if (dist[next] > dist[now] + spreadTime) {
+                dist[next] = dist[now] + spreadTime;
+                pq.push({dist[next], next});
+                infected[next] = true;
+            }
+        }
+    }
+}
+
+void Count() {
+    cnt = 0;
+    FinalInfectionTime = 0;
+    for (int i = 1; i <= n; i++) {
+        if (infected[i]) {
+            cnt++;
+            FinalInfectionTime = max(FinalInfectionTime, dist[i]);
+        }
+    }
+    cout << cnt << " " << FinalInfectionTime << "\n";
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> T;
+
+    while (T--) {
+        cin >> n >> d >> c;
+
+        for (int i = 0; i <= n; i++) {
+            v[i].clear();
+        }
+
+        for (int i = 0; i < d; i++) {
+            int a, b, s;
+            cin >> a >> b >> s;
+            v[b].push_back({a, s});  // b가 감염되면 s초 후 a도 감염
+        }
+
+        dijkstra();
+        Count();
+    }
+
+    return 0;
+}
