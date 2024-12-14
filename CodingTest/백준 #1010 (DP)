@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int t,n,m;
+
+int main(){
+    ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	
+    cin>>t;
+    
+    while(t--){
+        cin>>n>>m;
+        long answer =1;
+        int k=1;
+        for(int i=m; i>m-n; i--){
+            answer*=i;
+            answer/=k;
+            k++;
+        }
+        
+        cout<<answer<<"\n";
+    }
+    
+    
+    return 0;
+}
