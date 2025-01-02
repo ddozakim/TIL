@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+int max_count=0;
+int N,d,k,c;
+int sushi[30001];
+int check[3001];
+int flag,coupon; //중복된 스시 체크, 쿠폰 스시가 있는지
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+    
+    cin>>N>>d>>k>>c;
+    
+    for(int i=0; i<N; i++){
+        cin>>sushi[i];
+    }
+    
+    for(int i=0; i<N; i++){
+        flag=0;
+        coupon=1;
+        
+        for(int j=i; j<i+k; j++){
+            if(check[sushi[j%N]]==1) flag++; // 같은 종류의 초밥이 있는 경우 중복 카운트
+            else check[sushi[j%N]]=1; // 새로운 종류의 초밥인 경우 
+            
+            if(sushi[j%N]==c) coupon=0; //쿠폰 스시 있을 경우 
+        }
+        max_count= max(max_count,k-flag+coupon);
+        memset(check,0,sizeof(check));
+    }
+    
+    cout << max_count;
+    
+	return 0;
+}
