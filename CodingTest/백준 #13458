@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int N,B,C;
+int room[1000001];//시험장 학생 수 
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+    
+    cin>>N;
+    for(int i=0; i<N;i++){
+        cin>>room[i];
+    }
+    
+    cin>>B>>C;
+    long long total=0;
+    for(int i=0; i<N;i++){
+        double ppl = room[i];
+        double tmp = ppl-B;
+        if(tmp<=0){
+            total+=1;
+            continue;
+        }
+        if(tmp<=C){
+            total+=2;
+            continue;
+        }
+        else{
+            total++;
+            tmp=ceil(tmp/C);
+            total += tmp;
+        }
+    }
+    cout<<total<<"\n";
+
+	return 0;
+}
