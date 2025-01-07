@@ -1,0 +1,87 @@
+#include <iostream>
+
+using namespace std;
+
+int N,M,x,y,K;
+int MAP[20][20];
+int dx[]={0,0,-1,1}; // 동,서,남,북
+int dy[]={1,-1,0,0};
+
+int dice[7] = {0,0,0,0,0,0,0}; // dice[1]은 항상 밑면, dice[6]은 항상 윗면
+
+void rollDice(int dir){
+    int d1,d2,d3,d4,d5,d6;
+    d1 = dice[1]; d2 = dice[2]; d3 = dice[3];
+    d4 = dice[4]; d5 = dice[5]; d6 = dice[6];
+    
+    if(dir==1){
+        dice[1]=d3;
+        dice[3]=d6;
+        dice[4]=d1; 
+        dice[6]=d4;
+    }
+    else if(dir==2){
+        dice[1]=d4;
+        dice[3]=d1;
+        dice[4]=d6;
+        dice[6]=d3;
+    }
+    else if(dir==3){
+        dice[1]=d2;
+        dice[2]=d6;
+        dice[5]=d1;
+        dice[6]=d5;
+    }
+    else if(dir==4){
+        dice[1]=d5;
+        dice[2]=d1;
+        dice[5]=d6;
+        dice[6]=d2;
+    }
+}
+
+void printNum(int dir){
+    
+    int nx = x+dx[dir-1];
+    int ny = y+dy[dir-1];
+    
+    if(nx<0 || ny<0|| nx>=N||ny>=M) return; // 범위 넘을 시 이동 X
+    
+    rollDice(dir);
+    
+    if(MAP[nx][ny]==0){
+       //주사위의 바닥면에 쓰여 있는 수가 칸에 복사
+       MAP[nx][ny]=dice[1];
+    }
+    else{
+       //칸에 쓰여 있는 수가 주사위의 바닥면으로 복사, 칸에 쓰여 있는 수는 0이 됨 
+       dice[1] = MAP[nx][ny];
+       MAP[nx][ny]=0;
+    }
+     
+    cout<<dice[6]<<"\n";
+    
+    x=nx; y=ny;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>N>>M>>x>>y>>K;
+    
+    for(int i=0; i<N;i++){
+        for(int j=0; j<M;j++){
+            cin>>MAP[i][j];
+        }
+    }
+ 
+    while(K--){
+        int dir;
+        cin>>dir;
+        printNum(dir);
+    }
+    
+    return 0;
+}
