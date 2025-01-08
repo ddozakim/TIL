@@ -1,0 +1,35 @@
+#include <iostream>
+
+using namespace std;
+
+int N;
+int T[15];
+int P[15];
+int dp[15]={0};
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>N;
+
+    for(int i=0; i<N;i++){
+        cin>>T[i]>>P[i];
+    }
+    
+    int maxi=0;
+    
+    for(int i=0; i<=N;i++){
+        
+        dp[i] = max(maxi, dp[i]);
+        //퇴사일 전까지 가능할 때만
+        if(T[i]+i<=N){
+            dp[T[i]+i] = max(dp[T[i]+i],dp[i]+P[i]);
+        }
+        maxi = max(maxi,dp[i]);
+    }
+    cout<< maxi;
+    
+    return 0;
+}
