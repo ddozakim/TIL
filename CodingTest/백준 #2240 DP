@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int T, W;
+vector<int> v;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> T >> W;
+    v.resize(T + 1);
+    for (int i = 1; i <= T; i++) {
+        cin >> v[i];
+    }
+    vector<vector<int>> dp(T + 1, vector<int>(W + 1, 0));
+
+    // 초기 상태 설정
+    for (int t = 1; t <= T; t++) {
+        for (int w = 0; w <= W; w++) {
+            // 같은 위치에 머물렀을 때
+            dp[t][w] = dp[t - 1][w] + (v[t] == (w % 2 + 1));
+            
+            // 이동할 경우
+            if (w > 0) {
+                dp[t][w] = max(dp[t][w], dp[t - 1][w - 1] + (v[t] == (w % 2 + 1)));
+            }
+        }
+    }
+
+    // 결과 출력
+    int result = 0;
+    for (int w = 0; w <= W; w++) {
+        result = max(result, dp[T][w]);
+    }
+    cout << result << '\n';
+
+    return 0;
+}
