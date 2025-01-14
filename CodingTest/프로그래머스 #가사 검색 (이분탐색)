@@ -14,7 +14,8 @@ vector<int> solution(vector<string> words, vector<string> queries) {
     vector<int> answer;
     vector<string> r_words; // 문자열들 뒤집은 vector
     for(auto word: words) {
-        r_words.push_back(string(word.rbegin(), word.rend()));
+        reverse(word.begin(),word.end());
+        r_words.push_back(word);
     }
     
     // 이분탐색 위해 정렬
