@@ -1,0 +1,33 @@
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<int> a) {
+    int n = a.size();
+    if (n < 2) return 0; // 스타 수열이 될 수 없음
+
+    unordered_map<int, int> freq; // 숫자별 등장 횟수
+    int maxLength = 0;
+
+    // 숫자의 등장 횟수 카운트 (O(N))
+    for (int num : a) {
+        freq[num]++;
+    }
+
+    for (auto &[t, count] : freq) { 
+        if (count * 2 <= maxLength) continue;  // 최댓값보다 작은 경우 건너뛰기
+
+        int length = 0;
+        for (int i = 0; i < n - 1; i++) {
+            if ((a[i] == t || a[i + 1] == t) && (a[i] != a[i + 1])) {
+                length += 2;
+                i++; // 다음 인덱스를 건너뛰어야 함 (짝을 만들었으므로)
+            }
+        }
+        maxLength = max(maxLength, length);
+    }
+
+    return maxLength;
+}
