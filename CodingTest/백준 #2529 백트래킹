@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int k;
+char arr[10];  // 부등호 저장
+bool visited[10];  // 숫자 사용 여부
+string min_ans = "9999999999", max_ans = "0";  // 최대, 최소 정수 저장
+
+// 백트래킹 함수
+void solve(int index, string num) {
+    if (index == k + 1) {  // 숫자 k+1개를 모두 선택했을 때 종료
+        min_ans = min(min_ans, num);
+        max_ans = max(max_ans, num);
+        return;
+    }
+
+    for (int i = 0; i <= 9; i++) {
+        if (visited[i]) continue;  // 이미 사용한 숫자는 건너뛰기
+      
+        if (index == 0 || (arr[index - 1] == '<' && num.back() < (i + '0')) ||
+            (arr[index - 1] == '>' && num.back() > (i + '0'))) {
+            visited[i] = true;
+            solve(index + 1, num + to_string(i));
+            visited[i] = false;
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> k;
+    for (int i = 0; i < k; i++) {
+        cin >> arr[i];
+    }
+
+    solve(0, "");  // 초기 숫자는 빈 문자열
+
+    cout << max_ans << "\n" << min_ans << "\n";
+    return 0;
+}
