@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+//입력 : 지도 크기, 경사로 길이
+//로직 : 
+// 1. 행, 열마다 반복문을 통해 검사
+// 2. 모든 칸의 높이가 같은가?
+// 3. 같지 않으면 경사로를 놓을 수 있는가?
+// 4. 연결할 칸의 높이차가 1인가, 길이가 L 인가  
+//출력 : 지나갈 수 있는 길의 개수
+
+
+int N, L;
+int arr[100][100]; // 지도 저장
+
+// 경사로를 놓을 수 있는지 확인하는 함수
+bool canMakeSlope(vector<int>& road) {
+    vector<bool> visited(N, false); // 경사로 설치 여부 확인
+
+    for (int i = 0; i < N - 1; i++) {
+        if (road[i] == road[i + 1]) continue; // 높이가 같으면 넘어감
+
+        // 높이 차이가 2 이상이면 경사로 설치 불가능
+        if (abs(road[i] - road[i + 1]) >= 2) return false;
+
+        // 현재 위치가 더 높은 경우 (내리막 경사로 필요)
+        if (road[i] > road[i + 1]) {
+            for (int j = i + 1; j <= i + L; j++) {
+                if (j >= N || road[j] != road[i + 1] || visited[j]) return false;
+                visited[j] = true;
+            }
+        }
+        // 현재 위치가 더 낮은 경우 (오르막 경사로 필요)
+        else {
+            for (int j = i; j > i - L; j--) {
+                if (j < 0 || road[j] != road[i] || visited[j]) return false;
+                visited[j] = true;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> N >> L;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> arr[i][j];
+        }
+    }
+
+    int count = 0;
+
+    // 행 검사
+    for (int i = 0; i < N; i++) {
+        vector<int> row;
+        for (int j = 0; j < N; j++) row.push_back(arr[i][j]);
+        if (canMakeSlope(row)) count++;
+    }
+
+    // 열 검사
+    for (int j = 0; j < N; j++) {
+        vector<int> col;
+        for (int i = 0; i < N; i++) col.push_back(arr[i][j]);
+        if (canMakeSlope(col)) count++;
+    }
+
+    cout << count << "\n";
+    return 0;
+}
