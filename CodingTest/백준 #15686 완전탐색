@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int N, M;
+int arr[50][50];
+vector<pair<int, int>> chicken;
+vector<int> tmp;
+int chickenDistance = 1e9;
+bool visited[13];
+
+void solve(int start, int count);
+int getDistance();
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin >> N >> M;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> arr[i][j];
+            if (arr[i][j] == 2) {
+                chicken.push_back({i, j});
+            }
+        }
+    }
+    
+    solve(0, 0);
+    cout << chickenDistance;
+
+    return 0;
+}
+
+// 집과 치킨집 사이의 최소 거리 탐색
+int getDistance() {
+    int totalDist = 0;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (arr[i][j] == 1) {  // 집이면 최소 치킨 거리 계산
+                int minDist = 1e9;
+                for (int index : tmp) {
+                    int cx = chicken[index].first;
+                    int cy = chicken[index].second;
+                    minDist = min(minDist, abs(i - cx) + abs(j - cy));
+                }
+                totalDist += minDist;
+            }
+        }
+    }
+
+    return totalDist;
+}
+
+// 중복 제거한 조합 방식의 백트래킹
+void solve(int start, int count) {
+    if (count == M) {
+        chickenDistance = min(chickenDistance, getDistance());
+        return;
+    }
+
+    for (int i = start; i < chicken.size(); i++) {
+        if (visited[i]) continue;
+        visited[i] = true;
+        tmp.push_back(i);
+        solve(i + 1, count + 1);
+        visited[i] = false;
+        tmp.pop_back();
+    }
+}
