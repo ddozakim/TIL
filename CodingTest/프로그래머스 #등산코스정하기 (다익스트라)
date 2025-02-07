@@ -1,0 +1,67 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#define MAX 1e9
+using namespace std;
+
+//최단 거리 상관 없음. 
+//봉우리까지 가는 길에 최대 w가 최소가 되어야함 
+
+int min_intensity=MAX;
+int top=MAX;
+vector<pair<int,int>> graph[50001];
+
+void solve(int start, vector<int>& summits){
+    queue<pair<int,int>> q;
+    q.push({start,0});
+    
+    while(!q.empty()){
+        int now = q.front().first;
+        int intensity = q.front().second;
+        q.pop();
+        
+        if(find(summits.begin(), summits.end(), now) != summits.end()){
+            if(min_intensity>=intensity){
+                min_intensity = intensity;
+                top = min(top,now);
+            }
+            
+        }
+        else{
+            for(auto edge : graph[now]){
+                int next = edge.first;
+                int w = edge.second;
+                if(w<intensity){
+                    q.push({next,intensity});
+                }
+                else q.push({next,w});
+            }
+        }
+    }
+    return ;
+}
+
+vector<int> solution(int n, vector<vector<int>> paths, vector<int> gates, vector<int> summits) {
+    vector<int> answer(2);
+    answer[0] = MAX;
+    answer[1] = MAX;
+    
+    
+    for(int i=0; i<paths.size();i++){
+        int a,b,c;
+        a = paths[i][0]; b=paths[i][1]; c=paths[i][2];
+        graph[a].push_back({b,c});
+        graph[b].push_back({a,c});
+    }
+    
+    for(int i=0; i<gates.size();i++){
+        solve(gates[i],summits);
+        if(answer[0]>=min_intensity){
+            answer[0] = min_intensity;
+            answer[1] = min(answer[1],top);
+        }
+    }
+    
+    return answer;
+}
