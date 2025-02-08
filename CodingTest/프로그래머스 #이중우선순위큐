@@ -1,0 +1,34 @@
+#include <string>
+#include <vector>
+#include <set>
+#include <sstream>
+#include <iostream>
+
+using namespace std;
+
+vector<int> solution(vector<string> operations) {
+    multiset<int> ms; // 기본 정렬: 오름차순
+    char c;
+    int n;
+
+    for (const string& op : operations) {
+        stringstream ss(op);
+        ss >> c >> n;
+
+        if (c == 'I') {
+            ms.insert(n); // 삽입 연산
+        } else if (!ms.empty()) { // 삭제 연산 (비어있을 때 처리 방지)
+            if (n == 1) { 
+                ms.erase(prev(ms.end())); // 최댓값 삭제
+            } else { 
+                ms.erase(ms.begin()); // 최솟값 삭제
+            }
+        }
+    }
+
+    if (ms.empty()) {
+        return {0, 0}; // 큐가 비어있으면 [0,0] 반환
+    }
+
+    return {*ms.rbegin(), *ms.begin()}; // {최댓값, 최솟값}
+}
