@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+long long N;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>N;
+    long long current_cat= 0;
+    long long more_cat = 0;
+    int count =0;
+    while(true){
+        if(current_cat==N) break;
+        if(current_cat==0){
+            current_cat++;
+            count++;
+        }
+        else{
+            if(current_cat*2>=N){
+                count++;
+                break;
+            }
+            else{
+                current_cat*=2;
+                count++;
+            }
+        }
+        
+    }
+    cout<<count;
+    
+    return 0;
+}
