@@ -1,0 +1,53 @@
+#include <string>
+#include <vector>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+set<vector<string>> unique_sets; // 중복된 조합을 방지하기 위한 set
+
+// 백트래킹 함수
+void dfs(int index, vector<string>& selected, vector<vector<string>>& candidates) {
+    if (index == candidates.size()) {
+        vector<string> temp = selected;
+        sort(temp.begin(), temp.end()); // 정렬하여 중복 방지
+        unique_sets.insert(temp);
+        return;
+    }
+
+    for (const string& id : candidates[index]) {
+        // 이미 선택된 사용자라면 스킵
+        if (find(selected.begin(), selected.end(), id) != selected.end()) continue;
+
+        selected.push_back(id);
+        dfs(index + 1, selected, candidates);
+        selected.pop_back();
+    }
+}
+
+int solution(vector<string> user_id, vector<string> banned_id) {
+    vector<vector<string>> candidates(banned_id.size());
+
+    // 각 banned_id에 대해 매칭 가능한 user_id 찾기
+    for (int i = 0; i < banned_id.size(); i++) {
+        for (const string& user : user_id) {
+            if (user.size() != banned_id[i].size()) continue;
+
+            bool match = true;
+            for (int j = 0; j < user.size(); j++) {
+                if (banned_id[i][j] == '*') continue;
+                if (banned_id[i][j] != user[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) candidates[i].push_back(user);
+        }
+    }
+
+    vector<string> selected;
+    dfs(0, selected, candidates);
+
+    return unique_sets.size();
+}
