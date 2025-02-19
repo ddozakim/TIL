@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+// 주어진 범위가 회문인지 확인하는 함수
+bool checkPalindrome(string &str, int left, int right) {
+    while (left < right) {
+        if (str[left] != str[right]) return false;
+        left++;
+        right--;
+    }
+    return true;
+}
+
+// 회문 여부 판별 함수
+void isPalindrome(string str) {
+    int left = 0, right = str.size() - 1;
+
+    while (left < right) {
+        if (str[left] == str[right]) {
+            left++;
+            right--;
+        } else {
+            // 한 문자를 제거한 경우를 각각 확인
+            if (checkPalindrome(str, left + 1, right) || checkPalindrome(str, left, right - 1)) {
+                cout << 1 << "\n"; // 유사회문
+            } else {
+                cout << 2 << "\n"; // 일반 문자열
+            }
+            return;
+        }
+    }
+
+    // 회문인 경우
+    cout << 0 << "\n";
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int T;
+    cin >> T;
+    
+    while (T--) {
+        string str;
+        cin >> str;
+        isPalindrome(str);
+    }
+
+    return 0;
+}
