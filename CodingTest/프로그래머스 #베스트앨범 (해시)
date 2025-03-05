@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+// 장르별 총 재생 횟수 저장
+map<string, int> genrePlayCount;
+// 장르별 인덱스 매핑
+map<string, int> genreIndex;
+
+// 장르 정렬 기준: 재생 횟수 기준 내림차순, 같다면 등록된 순서대로
+bool compareGenres(const pair<string, int>& a, const pair<string, int>& b) {
+    if (a.second == b.second) return genreIndex[a.first] < genreIndex[b.first]; 
+    return a.second > b.second;
+}
+
+vector<int> solution(vector<string> genres, vector<int> plays) {
+    vector<int> answer;
+    int genreCount = 0;
+
+    // 장르별 총 재생 횟수 및 인덱스 매핑
+    for (int i = 0; i < genres.size(); i++) {
+        genrePlayCount[genres[i]] += plays[i];
+
+        if (genreIndex.find(genres[i]) == genreIndex.end()) {
+            genreIndex[genres[i]] = genreCount++;
+        }
+    }
+
+    // 장르별 노래 저장 (크기를 장르 개수로 설정)
+    vector<vector<pair<int, int>>> songsByGenre(genreCount);
+    
+    // 각 장르에 속하는 노래 분류
+    for (int i = 0; i < genres.size(); i++) {
+        int index = genreIndex[genres[i]];
+        songsByGenre[index].push_back({plays[i], i});
+    }
+
+    // 각 장르 내부에서 재생 횟수 기준 내림차순 정렬 (같다면 고유 번호가 작은 순서)
+    for (auto& songs : songsByGenre) {
+        sort(songs.begin(), songs.end(), [](const pair<int, int>& a, const pair<int, int>& b) {
+            if (a.first == b.first) return a.second < b.second;
+            return a.first > b.first;
+        });
+    }
+
+    // 장르별 총 재생 횟수를 기준으로 내림차순 정렬
+    vector<pair<string, int>> sortedGenres(genrePlayCount.begin(), genrePlayCount.end());
+    sort(sortedGenres.begin(), sortedGenres.end(), compareGenres);
+
+    // 결과 구성 (각 장르에서 최대 2곡 선택)
+    for (const auto& genre : sortedGenres) {
+        int index = genreIndex[genre.first];
+        for (int i = 0; i < min(2, (int)songsByGenre[index].size()); i++) {
+            answer.push_back(songsByGenre[index][i].second);
+        }
+    }
+
+    return answer;
+}
