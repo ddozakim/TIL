@@ -1,0 +1,21 @@
+#include <string>
+#include <vector>
+#include <stack>
+using namespace std;
+
+vector<int> solution(vector<int> numbers) {
+    vector<int> answer(numbers.size(), -1); // 기본값 -1로 초기화
+    stack<int> s; // 인덱스를 저장하는 스택
+
+    for (int i = numbers.size() - 1; i >= 0; i--) {  // 뒤에서부터 확인
+        while (!s.empty() && s.top() <= numbers[i]) {
+            s.pop(); // 스택에서 현재 값보다 작은 값들은 제거
+        }
+        if (!s.empty()) {
+            answer[i] = s.top(); // 스택의 맨 위가 뒷 큰수
+        }
+        s.push(numbers[i]); // 현재 값을 스택에 push
+    }
+
+    return answer;
+}
