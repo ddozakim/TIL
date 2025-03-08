@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <set>
+
+using namespace std;
+
+vector<int> solution(vector<string> gems) {
+    vector<int> answer;
+    
+    set<string> gemTypes(gems.begin(), gems.end()); // 보석 종류 구하기
+    int totalTypes = gemTypes.size(); // 보석 종류 개수
+    
+    unordered_map<string, int> gemCount; // 현재 포함된 보석 개수
+    int left = 0, right = 0;
+    int minLength = gems.size() + 1;
+    int start = 0, end = 0;
+    
+    while (right < gems.size()) {
+        // 오른쪽 포인터를 확장하면서 보석을 추가
+        gemCount[gems[right]]++;
+        
+        // 모든 종류의 보석을 포함할 때까지 right 증가
+        while (gemCount.size() == totalTypes) {
+            // 최소 길이 갱신
+            if (right - left + 1 < minLength) {
+                minLength = right - left + 1;
+                start = left;
+                end = right;
+            }
+            
+            // 왼쪽 포인터 이동하면서 보석 개수 조정
+            gemCount[gems[left]]--;
+            if (gemCount[gems[left]] == 0) {
+                gemCount.erase(gems[left]);
+            }
+            left++;
+        }
+        
+        right++;
+    }
+    
+    answer.push_back(start + 1);
+    answer.push_back(end + 1);
+    
+    return answer;
+}
