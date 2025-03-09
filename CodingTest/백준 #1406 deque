@@ -1,0 +1,51 @@
+#include <iostream>
+#include <deque>
+
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    string str;
+    cin >> str;
+
+    int m;
+    cin >> m;
+
+    deque<char> left_stack(str.begin(), str.end());  // 초기 문자열을 왼쪽에 저장
+    deque<char> right_stack;  // 오른쪽 스택은 빈 상태
+
+    char command;
+    while (m--) {
+        cin >> command;
+        if (command == 'L') {
+            if (!left_stack.empty()) { 
+                right_stack.push_front(left_stack.back());
+                left_stack.pop_back();
+            }
+        } 
+        else if (command == 'D') {
+            if (!right_stack.empty()) {
+                left_stack.push_back(right_stack.front());
+                right_stack.pop_front();
+            }
+        } 
+        else if (command == 'B') {
+            if (!left_stack.empty()) { 
+                left_stack.pop_back();
+            }
+        } 
+        else if (command == 'P') {
+            char c;
+            cin >> c;
+            left_stack.push_back(c);
+        }
+    }
+
+    for (char c : left_stack) cout << c;
+    for (char c : right_stack) cout << c;
+
+    return 0;
+}
