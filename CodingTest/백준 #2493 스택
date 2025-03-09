@@ -19,7 +19,7 @@ int main(void) {
 				cout << s.top().first << ' ';
 				break;
 			}
-			S.pop();
+			s.pop();
 		}
 		
 		if (s.empty()) {
