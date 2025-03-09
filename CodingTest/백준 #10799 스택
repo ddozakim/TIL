@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+    string stick;
+    cin>>stick;
+    
+   
+    int answer =0; // 잘려진 조각의 총 개수
+    
+    stack<char> st; //현재 막대 
+    
+    for(int i=0; i<stick.size();i++){
+        if(stick[i]=='('&& stick[i+1]==')'){
+            answer+=st.size();
+            i++;
+            continue;
+        }
+        if(stick[i]=='('){
+            st.push('(');
+        }
+        else if(stick[i]==')'){
+            st.pop();
+            answer++;
+        }
+    }
+    
+    cout<<answer;
+
+	return 0;
+}
