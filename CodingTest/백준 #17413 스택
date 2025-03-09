@@ -1,0 +1,56 @@
+#include <iostream>
+#include <deque>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    string str;
+    getline(cin, str);  // 한 줄 전체 입력받기
+
+    deque<char> dq;
+    bool tag = false; // 태그 내부인지 여부
+
+    for (int i = 0; i < str.size(); i++) {
+        if (str[i] == '<') {  
+            // 태그 시작 → 이전 단어 출력 후 태그 출력 모드로 전환
+            while (!dq.empty()) {
+                cout << dq.back();
+                dq.pop_back();
+            }
+            cout << '<';
+            tag = true;
+        } 
+        else if (str[i] == '>') {  
+            // 태그 끝 → 그대로 출력
+            cout << '>';
+            tag = false;
+        } 
+        else if (tag) {  
+            // 태그 내부라면 그대로 출력
+            cout << str[i];
+        } 
+        else if (str[i] == ' ') {  
+            // 공백이면 현재까지 쌓인 단어 출력 후 공백 출력
+            while (!dq.empty()) {
+                cout << dq.back();
+                dq.pop_back();
+            }
+            cout << ' ';
+        } 
+        else {  
+            // 태그 밖의 문자라면 스택에 저장 (단어 뒤집기 위함)
+            dq.push_back(str[i]);
+        }
+    }
+
+    // 마지막 단어 출력
+    while (!dq.empty()) {
+        cout << dq.back();
+        dq.pop_back();
+    }
+
+    return 0;
+}
