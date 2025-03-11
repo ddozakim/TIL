@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> tree[501];  // 인접 리스트
+bool visited[501];      // 방문 여부
+bool bHasCycle;         // 사이클 존재 여부
+
+// BFS를 이용한 사이클 검사
+void bfs(int start) {
+    queue<pair<int, int>> q; // (현재 노드, 부모 노드)
+    q.push({start, -1});
+    visited[start] = true;
+
+    while (!q.empty()) {
+        int now = q.front().first;
+        int parent = q.front().second;
+        q.pop();
+
+        for (auto next : tree[now]) {
+            if (!visited[next]) {  
+                visited[next] = true;
+                q.push({next, now});
+            } 
+            else if (next != parent) {  
+                // 방문한 노드인데 부모가 아니면 사이클 발생
+                bHasCycle = true;
+            }
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n, m, testCase = 0;
+
+    while (cin >> n >> m) {
+        if (n == 0 && m == 0) break;
+        testCase++;
+
+        // 초기화
+        memset(visited, false, sizeof(visited));
+        for (int i = 1; i <= n; i++) tree[i].clear();
+        bHasCycle = false;
+        
+        // 그래프 입력 받기
+        for (int i = 0; i < m; i++) {
+            int a, b;
+            cin >> a >> b;
+            tree[a].push_back(b);
+            tree[b].push_back(a);
+        }
+        
+        int count = 0;  // 트리 개수 세기
+        
+        for (int i = 1; i <= n; i++) {
+            if (!visited[i]) {
+                bfs(i);
+                if (!bHasCycle) count++;  // 사이클이 없는 경우만 트리로 인정
+                bHasCycle = false;  // 다음 탐색을 위해 초기화
+            }
+        }
+
+        // 결과 출력
+        if (count == 0) cout << "Case " << testCase << ": No trees.\n";
+        else if (count == 1) cout << "Case " << testCase << ": There is one tree.\n";
+        else cout << "Case " << testCase << ": A forest of " << count << " trees.\n";
+    }
+
+    return 0;
+}
