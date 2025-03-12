@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n, m;
+vector<int> tree[100001];  // 트리 구조 저장
+int compliment[100001];    // 칭찬 누적 값 저장
+
+void dfs(int node) {
+    for (int next : tree[node]) {
+        compliment[next] += compliment[node];  // 부모의 칭찬을 자식에게 전파
+        dfs(next);
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n >> m;
+    
+    int parent;
+    for (int i = 1; i <= n; i++) {
+        cin >> parent;
+        if (parent != -1) {
+            tree[parent].push_back(i);
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        int employee, w;
+        cin >> employee >> w;
+        compliment[employee] += w;  // 칭찬 정보 입력
+    }
+
+    dfs(1);  // 루트(사장)에서 DFS 시작
+
+    for (int i = 1; i <= n; i++) {
+        cout << compliment[i] << " ";
+    }
+
+    return 0;
+}
