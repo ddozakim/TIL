@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n;
+vector<int> tree[1000001];
+int dp[1000001][2]; // [노드][얼리 어답터 여부] : 0(비선택), 1(선택)
+bool visited[1000001];
+
+void dfs(int node) {
+    visited[node] = true;
+    dp[node][0] = 0; // 현재 노드가 얼리 어답터가 아닐 때
+    dp[node][1] = 1; // 현재 노드가 얼리 어답터일 때
+    
+    for (int child : tree[node]) {
+        if (!visited[child]) {
+            dfs(child);
+            dp[node][0] += dp[child][1]; // 부모가 얼리 어답터가 아니면, 자식은 무조건 얼리 어답터여야 함
+            dp[node][1] += min(dp[child][0], dp[child][1]); // 부모가 얼리 어답터일 경우, 자식은 아무거나 가능
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n;
+    for (int i = 0; i < n - 1; i++) {
+        int u, v;
+        cin >> u >> v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+
+    dfs(1); // 루트 노드를 1번으로 설정하고 DFS 실행
+
+    cout << min(dp[1][0], dp[1][1]) << "\n"; // 최소 얼리 어답터 수 출력
+    return 0;
+}
