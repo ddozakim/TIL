@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+vector<string> answer;
+map<string, vector<string>> graph;
+map<string, vector<bool>> visited;
+int ticketCount;
+
+bool dfs(string airport, vector<string>& route) {
+    if (route.size() == ticketCount + 1) {
+        answer = route; // 모든 항공권을 사용한 경우 정답 저장
+        return true;
+    }
+
+    for (int i = 0; i < graph[airport].size(); i++) {
+        if (!visited[airport][i]) {
+            visited[airport][i] = true;  // 방문 표시
+            route.push_back(graph[airport][i]);
+
+            if (dfs(graph[airport][i], route)) return true;
+
+            route.pop_back();   // 백트래킹
+            visited[airport][i] = false;
+        }
+    }
+    return false;
+}
+
+vector<string> solution(vector<vector<string>> tickets) {
+    ticketCount = tickets.size();
+
+    // 그래프 구성 및 정렬
+    for (auto& ticket : tickets) {
+        graph[ticket[0]].push_back(ticket[1]);
+    }
+    for (auto& [key, val] : graph) {
+        sort(val.begin(), val.end()); // 알파벳 순 정렬
+        //val.size()만큼의 false를 가진 vector<bool>을 생성 후 visited[key]에 할당
+        visited[key] = vector<bool>(val.size(), false);
+    }
+
+    vector<string> route = {"ICN"};
+    dfs("ICN", route);
+    return answer;
+}
