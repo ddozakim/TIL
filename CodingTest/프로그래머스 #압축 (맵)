@@ -1,0 +1,43 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <string>
+using namespace std;
+
+//1. 알파벳이랑 색인번호 맵에 추가
+//2. 다음 글자까지 등록 안되어있으면 멈추고
+//3. 등록된 단어 출력, 등록 안된 단어 추가
+// 2,3번  반복
+
+vector<int> solution(string msg) {
+    vector<int> answer;
+    
+    map<string,int> dictionary;
+    for(int i=1; i<=26;i++){
+        char alpha = i + 'A' - 1; 
+        string str(1,alpha);
+        dictionary[str]=i;
+    }
+    
+    int index=0;
+    string current="";
+   
+    while(index<msg.size()){
+        
+        current+= msg[index];
+        
+        if(dictionary.find(current)!=dictionary.end()) {
+            index++;  
+            string next= current+msg[index];
+            if(dictionary.find(next)==dictionary.end()){
+                answer.push_back(dictionary[current]);
+                dictionary[next]=dictionary.size()+1;
+                current="";  
+            }
+        }
+       
+    }
+    
+    
+    return answer;
+}
