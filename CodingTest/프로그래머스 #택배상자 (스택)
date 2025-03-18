@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <stack>
+using namespace std;
+
+int solution(vector<int> order) {
+    int answer = 0;
+    stack<int> st;
+    int j=1;
+    for(int i=0; i<order.size();i++){
+        
+        if(st.empty()) {
+            st.push(j);
+            j++;
+        }
+        if(st.top()>order[i]) break;
+        if(st.top()==order[i]) {
+            answer++;
+            st.pop();
+            continue;
+        }
+        while(j<=order.size()){
+            if(j==order[i]){
+                answer++;
+                j++;
+                break;
+            }
+            st.push(j);
+            j++;
+        }
+    }
+    
+    return answer;
+} 
+ 
