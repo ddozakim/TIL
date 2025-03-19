@@ -1,0 +1,59 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <cstring>
+using namespace std;
+#define INF 1e9
+// sorces 지역에서 destination으로 복귀하는 최단 시간을 담은 배열 리턴
+// 각 지역 간 걸리는 시간은 모두 1 
+//복귀 불가능 -> -1
+
+vector<int> graph[100001];
+vector<int> cost(100001, INF);
+
+void dijkstra(int start){
+    
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,start});
+    cost[start] =0;
+    
+    while(!pq.empty()){
+        int c = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+        
+        if(cost[now]<c) continue;
+        for(auto next : graph[now]){
+            if(cost[next]>cost[now]+1){
+                cost[next] = cost[now]+1;
+                pq.push({cost[next],next});
+            }
+        }
+    }
+
+    return;
+}
+
+vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int destination) {
+    vector<int> answer;
+    
+    for(int i=0; i<roads.size();i++){
+        int u = roads[i][0];
+        int v = roads[i][1];
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+    dijkstra(destination);
+    
+    for(int i=0; i<sources.size();i++){
+        if(cost[sources[i]]!=INF){
+            answer.push_back(cost[sources[i]]);
+        }
+        else{
+            answer.push_back(-1);
+        }
+    }
+    
+    return answer;
+    
+}
