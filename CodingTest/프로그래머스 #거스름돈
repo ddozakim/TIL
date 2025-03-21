@@ -1,1 +1,17 @@
+#include <vector>
+
+using namespace std;
+
+int solution(int n, vector<int> money) {
+    vector<int> dp(n + 1, 0);
+    dp[0] = 1;  // 금액 0을 만드는 경우는 한 가지 (아무 동전도 사용하지 않는 경우)
+
+    for (int coin : money) {
+        for (int i = coin; i <= n; i++) {
+            dp[i] = (dp[i] + dp[i - coin]) % 1000000007;
+        }
+    }
+    
+    return dp[n];
+}
 
