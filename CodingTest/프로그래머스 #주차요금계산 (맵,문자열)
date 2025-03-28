@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+
+using namespace std;
+
+vector<int> solution(vector<int> fees, vector<string> records) {
+    vector<int> answer;
+    map<string, int> parking;  // 입차 시간 저장
+    map<string, int> totalTime; // 누적 주차 시간 저장
+
+    for (string record : records) {
+        stringstream ss(record);
+        string time, number, type;
+        ss >> time >> number >> type;
+
+        int hour = stoi(time.substr(0, 2));
+        int minute = stoi(time.substr(3, 2));
+        int totalMinutes = hour * 60 + minute;  // 시간을 분으로 변환
+
+        if (type == "IN") {
+            parking[number] = totalMinutes;
+        } else { // "OUT"
+            int inTime = parking[number];
+            totalTime[number] += totalMinutes - inTime;
+            parking.erase(number);  // 출차했으므로 제거
+        }
+    }
+
+    //  아직 출차되지 않은 차량 처리 (23:59 출차)
+    for (auto p : parking) {
+        int inTime = p.second;
+        totalTime[p.first] += (23 * 60 + 59) - inTime;
+    }
+
+    //  요금 계산
+    for (auto car : totalTime) {
+        int time = car.second;
+        int fee = fees[1];  // 기본 요금
+
+        if (time > fees[0]) {  // 기본 시간 초과 시
+            fee += ((time - fees[0] + fees[2] - 1) / fees[2]) * fees[3]; // 올림 계산
+        }
+        answer.push_back(fee);
+    }
+
+    return answer;
+}
