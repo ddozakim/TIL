@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#define INF 1e9
+using namespace std;
+
+vector<pair<int,int>> graph[51];
+int dist[51];
+
+void dijkstra(int start,int n){
+    fill(dist,dist+n+1,INF);
+    
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,start});
+    dist[start]=0;
+    
+    while(!pq.empty()){
+        int d = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+        
+        if(dist[now]<d) continue;
+        
+        for(int i=0; i<graph[now].size();i++){
+            int next = graph[now][i].first;
+            int time = graph[now][i].second;
+            if(dist[next] > dist[now]+time){
+                dist[next] = dist[now]+time;
+                pq.push({dist[next],next});
+            }
+        }
+    }
+    return;
+}
+
+int solution(int N, vector<vector<int> > road, int K) {
+    int answer = 0;
+    
+    for(int i=0; i<road.size();i++){
+        int a = road[i][0];
+        int b = road[i][1];
+        int c = road[i][2];
+        graph[a].push_back({b,c});
+        graph[b].push_back({a,c});
+    }
+    
+    dijkstra(1,N);
+    
+    for(int i=1; i<=N ;i++){
+        if(dist[i]<=K) answer++;
+    }
+    
+
+    return answer;
+}
