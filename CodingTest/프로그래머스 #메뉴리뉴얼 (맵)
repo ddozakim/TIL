@@ -1,0 +1,54 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+map<string,int> m;
+
+void getMenu(int n,string foods, string current,int start){
+    
+    if(n==current.size()){
+        m[current]++;
+        return;
+    }
+    for(int i=start ; i<foods.size();i++){
+        getMenu(n,foods,current+foods[i],i+1);
+    }
+}
+
+vector<string> solution(vector<string> orders, vector<int> course) {
+    vector<string> answer;
+    
+    // 주문을 사전순으로 정렬 (조합을 일정한 순서로 만들기 위해)
+    for (string &order : orders) {
+        sort(order.begin(), order.end());
+    }
+    
+    for(int i=0; i<course.size();i++){
+        int n = course[i];
+        m.clear();
+        for(int i=0; i<orders.size();i++){
+            string foods = orders[i];
+            getMenu(n, foods,"",0);
+        }
+        vector<pair<string,int>> tmp(m.begin(),m.end());
+        sort(tmp.begin(),tmp.end(),[](pair<string,int>& a, pair<string,int>& b){
+            return a.second>b.second;
+        });
+        // 최소 2번 이상 등장한 조합만 포함
+        if (!tmp.empty() && tmp[0].second >= 2){
+            int maxi = tmp[0].second;
+            for(int i=0; i<tmp.size();i++){
+                if(tmp[i].second == maxi) answer.push_back(tmp[i].first);
+                else break;
+            }
+        }
+        
+    }
+    
+    sort(answer.begin(), answer.end());
+    
+    return answer;
+}
