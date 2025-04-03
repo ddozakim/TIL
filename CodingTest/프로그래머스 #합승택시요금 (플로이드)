@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#define INF 1e9 
+using namespace std;
+
+int dist[201][201];
+
+void floyd(int n) {
+    for (int k = 1; k <= n; k++) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (dist[i][k] != INF && dist[k][j] != INF) { // INF 연산 방지
+                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+    }
+}
+
+int solution(int n, int s, int a, int b, vector<vector<int>> fares) {
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (i == j) dist[i][j] = 0;
+            else dist[i][j] = INF;
+        }
+    }
+
+    for(int i=0; i<fares.size();i++){
+        int c = fares[i][0];
+        int d = fares[i][1];
+        int f = fares[i][2];
+        dist[c][d]=f;
+        dist[d][c]=f;
+    }
+
+    floyd(n);
+
+    // 최적 비용 계산
+    int minCost = INF;
+    for (int i = 1; i <= n; i++) { // 합승 종료 지점 i
+        if (dist[s][i] != INF && dist[i][a] != INF && dist[i][b] != INF) { // 유효한 경로인지 확인
+            minCost = min(minCost, dist[s][i] + dist[i][a] + dist[i][b]);
+        }
+    }
+
+    return minCost;
+}
