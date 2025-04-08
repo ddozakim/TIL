@@ -1,0 +1,55 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+//5단위로 끊어서 피로도 계산 1,5,25씩 
+//pair<int,int> 저장 - (피로도, 몇단락)
+//내림차순 정렬 -> 계산
+
+int solution(vector<int> picks, vector<string> minerals) {
+    int answer = 0;
+    int totalPicks = picks[0] + picks[1] + picks[2];
+    int totalChunks = min((int)minerals.size() / 5 + ((minerals.size() % 5) ? 1 : 0), totalPicks);
+
+    vector<pair<int,int>> info;
+    for(int i=0; i<totalChunks;i++){
+        int sum=0;
+        for(int j=i*5 ;j <i*5+5 && j < minerals.size();j++){
+            if(minerals[j]=="diamond") sum+=25;
+            else if(minerals[j]=="iron") sum+=5;
+            else if(minerals[j]=="stone") sum+=1;
+        }
+        info.push_back({sum,i});
+    }
+    sort(info.begin(),info.end(),[](pair<int,int> &a, pair<int,int> &b){
+        return a.first>b.first;
+    });
+    int gok=0;
+    for(int i=0; i<info.size(); i++){
+        int index = info[i].second;
+        while(gok<3 && picks[gok]==0) gok++;
+        if(gok==3) break;
+        int start = index*5;
+        for(int j=start; j<start+5&& j < minerals.size();j++){
+            if(gok==0){
+                if(minerals[j]=="diamond") answer++;
+                else if(minerals[j]=="iron") answer++;
+                else if(minerals[j]=="stone") answer++;
+            }
+            else if(gok==1){
+                if(minerals[j]=="diamond") answer+=5;
+                else if(minerals[j]=="iron") answer++;
+                else if(minerals[j]=="stone") answer++;
+            }
+            else{
+                if(minerals[j]=="diamond") answer+=25;
+                else if(minerals[j]=="iron") answer+=5;
+                else if(minerals[j]=="stone") answer++;
+            }
+        }
+        picks[gok]--;
+    }
+    
+    return answer;
+}
