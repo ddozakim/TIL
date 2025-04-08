@@ -1,0 +1,28 @@
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+long long solution(vector<int> weights) {
+    long long answer = 0;
+    unordered_map<int, int> count;
+
+    // 가능한 비율들: (a, b)
+    vector<pair<int, int>> ratios = {{1,1}, {1,2}, {2,3}, {3,4}};
+
+    // 몸무게 정렬
+    sort(weights.begin(), weights.end());
+
+    for (int w : weights) {
+        for (auto [a, b] : ratios) {
+            int target = w * a / b;
+            if ((w * a) % b == 0) {
+                answer += count[target];
+            }
+        }
+        count[w]++;
+    }
+
+    return answer;
+}
