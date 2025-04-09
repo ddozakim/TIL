@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int N,M;
+    cin>>N>>M;
+    int package=1e9;
+    int piece=1e9;
+    
+    for(int i=0; i<M;i++){
+        int a,b;
+        cin>>a>>b;
+        package =min(package,a);
+        piece=min(piece,b);
+    }
+  
+    int answer=0;
+    if(N<6) cout<<min(N*piece,package);
+    else{
+        int p = N/6;
+        answer= min(p*package,p*6*piece);
+        int r = N%6;
+        answer+= min(package, r*piece);
+        cout<<answer;
+    }
+    
+    return 0;
+}
