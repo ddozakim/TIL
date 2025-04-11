@@ -1,0 +1,45 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int gcd(int a, int b) {
+    while (b != 0) {
+        int tmp = b;
+        b = a % b;
+        a = tmp;
+    }
+    return a;
+}
+
+int findGCD(const vector<int>& nums) {
+    int result = nums[0];
+    for (int i = 1; i < nums.size(); ++i) {
+        result = gcd(result, nums[i]);
+    }
+    return result;
+}
+
+bool canDivide(const vector<int>& arr, int target) {
+    for (int num : arr) {
+        if (num % target == 0) return false; // 하나라도 나누어 떨어지면 안 됨
+    }
+    return true;
+}
+
+int solution(vector<int> arrayA, vector<int> arrayB) {
+    int answer = 0;
+    int gcdA = findGCD(arrayA);
+    int gcdB = findGCD(arrayB);
+
+    if (canDivide(arrayB, gcdA)) {
+        answer = max(answer, gcdA);
+    }
+
+    if (canDivide(arrayA, gcdB)) {
+        answer = max(answer, gcdB);
+    }
+
+    return answer;
+}
