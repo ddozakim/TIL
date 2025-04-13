@@ -1,0 +1,71 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+
+using namespace std;
+
+struct info{
+    int playTime;
+    string title;
+    string playedCode;
+};
+
+string replaceSharp(string code) {
+    // 알파벳#-> 소문자 알파벳으로 변환
+    string result = "";
+    for (int i = 0; i < code.size(); i++) {
+        if (i + 1 < code.size() && code[i + 1] == '#') {
+            result += tolower(code[i]);
+            i++; // skip '#'
+        } else {
+            result += code[i];
+        }
+    }
+    return result;
+}
+
+int getTime(string start, string end){
+    int s = stoi(start.substr(0,2)) * 60 + stoi(start.substr(3,2));
+    int e = stoi(end.substr(0,2)) * 60 + stoi(end.substr(3,2));
+    return e - s;
+}
+
+string solution(string m, vector<string> musicinfos) {
+    string answer = "(None)";
+    m = replaceSharp(m);
+    vector<info> candidates;
+
+    for (string music : musicinfos) {
+        stringstream ss(music);
+        string start, end, title, code;
+        getline(ss, start, ',');
+        getline(ss, end, ',');
+        getline(ss, title, ',');
+        getline(ss, code, ',');
+
+        int playTime = getTime(start, end);
+        code = replaceSharp(code);
+        
+        //재생 시간만큼 반복된 실제 코드 생성
+        string played = "";
+        for (int i = 0; i < playTime; i++) {
+            played += code[i % code.size()];
+        }
+        //m이 포함되는지 확인
+        if (played.find(m) != string::npos) {
+            candidates.push_back({playTime, title, played});
+        }
+    }
+
+    // 가장 긴 재생 시간의 음악 찾기
+    int maxTime = -1;
+    for (auto &c : candidates) {
+        if (c.playTime > maxTime) {
+            maxTime = c.playTime;
+            answer = c.title;
+        }
+    }
+
+    return answer;
+}
