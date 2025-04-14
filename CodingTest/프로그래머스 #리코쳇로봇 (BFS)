@@ -1,0 +1,75 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+int n, m;
+int dx[4] = {1, -1, 0, 0};  
+int dy[4] = {0, 0, 1, -1};
+
+bool isInBounds(int x, int y) {
+    return x >= 0 && x < n && y >= 0 && y < m;
+}
+
+int bfs(vector<string>& board) {
+    n = board.size();
+    m = board[0].size();
+    vector<vector<bool>> visited(n, vector<bool>(m, false));
+
+    // 시작 위치와 목표 위치 찾기
+    int sx, sy, gx, gy;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (board[i][j] == 'R') {
+                sx = i;
+                sy = j;
+            }
+            if (board[i][j] == 'G') {
+                gx = i;
+                gy = j;
+            }
+        }
+    }
+
+   
+    queue<pair<pair<int, int>, int>> q; // 시작 위치, 이동 횟수
+    q.push({{sx, sy}, 0});
+    visited[sx][sy] = true;
+
+    while (!q.empty()) {
+        auto [cur, moves] = q.front();
+        q.pop();
+        int x = cur.first;
+        int y = cur.second;
+
+        // 목표 지점에 도달하면 이동 횟수 리턴
+        if (x == gx && y == gy) {
+            return moves;
+        }
+
+        // 4방향으로 이동
+        for (int dir = 0; dir < 4; ++dir) {
+            int nx = x, ny = y;
+            // 현재 방향으로 가능한 최대 이동
+            while (isInBounds(nx + dx[dir], ny + dy[dir]) && board[nx + dx[dir]][ny + dy[dir]] != 'D') {
+                nx += dx[dir];
+                ny += dy[dir];
+            }
+
+            // 새로운 위치로 이동
+            if (!visited[nx][ny]) {
+                visited[nx][ny] = true;
+                q.push({{nx, ny}, moves + 1});
+            }
+        }
+    }
+
+    // 목표 지점에 도달할 수 없는 경우
+    return -1;
+}
+
+int solution(vector<string> board) {
+    return bfs(board);
+}
