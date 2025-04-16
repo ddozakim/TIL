@@ -1,0 +1,101 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <cstring>
+using namespace std;
+
+int n, m;
+int arr[300][300];
+bool visited[300][300];
+int dx[4] = {1, -1, 0, 0};
+int dy[4] = {0, 0, 1, -1};
+
+void bfs(int x, int y) {
+    queue<pair<int, int>> q;
+    q.push({x, y});
+    visited[x][y] = true;
+
+    while (!q.empty()) {
+        int a = q.front().first;
+        int b = q.front().second;
+        q.pop();
+
+        for (int i = 0; i < 4; i++) {
+            int nx = a + dx[i];
+            int ny = b + dy[i];
+
+            if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if (!visited[nx][ny] && arr[nx][ny] > 0) {
+                visited[nx][ny] = true;
+                q.push({nx, ny});
+            }
+        }
+    }
+}
+
+void melt() {
+    int temp[300][300] = {0};
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (arr[i][j] > 0) {
+                int sea = 0;
+                for (int d = 0; d < 4; d++) {
+                    int ni = i + dx[d];
+                    int nj = j + dy[d];
+                    if (ni >= 0 && nj >= 0 && ni < n && nj < m && arr[ni][nj] == 0) {
+                        sea++;
+                    }
+                }
+                temp[i][j] = max(0, arr[i][j] - sea);
+            }
+        }
+    }
+
+    // apply melted result
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            arr[i][j] = temp[i][j];
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            cin >> arr[i][j];
+
+    int year = 0;
+
+    while (true) {
+        memset(visited, false, sizeof(visited));
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (!visited[i][j] && arr[i][j] > 0) {
+                    bfs(i, j);
+                    count++;
+                }
+            }
+        }
+
+        if (count >= 2) {
+            cout << year << '\n';
+            break;
+        }
+
+        if (count == 0) {
+            cout << 0 << '\n';
+            break;
+        }
+
+        melt();
+        year++;
+    }
+
+    return 0;
+}
