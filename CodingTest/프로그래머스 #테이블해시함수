@@ -1,0 +1,32 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// i는 row index가 아니라 실제 "행 번호" 
+int get_S(int i, const vector<int>& row) {
+    int sum = 0;
+    for (int val : row) {
+        sum += val % i;
+    }
+    return sum;
+}
+
+int solution(vector<vector<int>> data, int col, int row_begin, int row_end) {
+    int answer = 0;
+
+    // 정렬: col-1 기준 오름차순, 같으면 첫 번째 열 내림차순
+    sort(data.begin(), data.end(), [col](const vector<int>& a, const vector<int>& b) {
+        if (a[col - 1] == b[col - 1]) return a[0] > b[0]; // 첫 열 내림차순
+        return a[col - 1] < b[col - 1];                  // col열 오름차순
+    });
+
+    // row_begin ~ row_end 범위에서 S_i를 XOR
+    for (int i = row_begin; i <= row_end; i++) {
+        int S_i = get_S(i, data[i - 1]);  // i는 1-based, data[i-1]은 0-based
+        answer ^= S_i;
+    }
+
+    return answer;
+}
