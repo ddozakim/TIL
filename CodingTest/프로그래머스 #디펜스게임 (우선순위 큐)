@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int solution(int n, int k, vector<int> enemy) {
+    priority_queue<int> pq; // 최대 힙
+    int i;
+
+    for (i = 0; i < enemy.size(); i++) {
+        n -= enemy[i]; // 일단 병사로 막는다
+        pq.push(enemy[i]); // 힙에 기록
+
+        if (n < 0) { // 병사 부족하면
+            if (k == 0) break; // 무적권도 없으면 게임 오버
+
+            // 가장 큰 적에게 무적권 사용
+            n += pq.top();
+            pq.pop();
+            k--;
+        }
+    }
+
+    return i; // 막은 라운드 수
+}
