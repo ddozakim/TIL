@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define INF 1e9
+
+int n,m;
+int parent[1001];
+int dist[1001];
+vector<pair<int,int>> graph[1001];
+int A,B;
+stack<int> routes;
+
+int dijkstra(int start){
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,start});
+    dist[start]=0;
+    parent[start]=0;
+    while(!pq.empty()){
+        int d = pq.top().first;
+        int now = pq.top().second;
+        pq.pop();
+        
+        if(dist[now]<d) continue;
+        
+        for(auto edge : graph[now]){
+            int next = edge.first;
+            int cost = edge.second;
+            if(dist[next]>dist[now]+cost){
+                dist[next]= dist[now]+cost;
+                parent[next]=now;
+                pq.push({dist[next],next});
+            }
+            
+        }
+    }
+    return dist[B];
+}
+
+int getRoute(int now, int count){
+   if(now==A){
+        routes.push(now);  // 시작점도 출력에 포함해야 함!
+        return count + 1;  // 시작점 포함해서 +1
+    }
+    
+    routes.push(now);
+    return getRoute(parent[now], count + 1); 
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>n>>m;
+    
+    for(int i=0; i<m;i++){
+        int a,b,c;
+        cin>>a>>b>>c;
+        graph[a].push_back({b,c});
+    }
+    
+    fill(dist, dist+n+1,INF);
+    cin>>A>>B;
+    
+    cout<<dijkstra(A)<<"\n";
+    cout<< getRoute(B,0)<<"\n";
+    while(!routes.empty()){
+        cout<<routes.top()<<" ";
+        routes.pop();
+    }
+    
+    
+    return 0;
+}
