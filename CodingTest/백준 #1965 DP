@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n;
+    cin >> n;
+    vector<int> arr(n);
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    vector<int> dp;
+    for(int i = 0; i < n; i++) {
+        // dp에서 arr[i]보다 처음으로 크거나 같은 값의 위치
+        auto it = lower_bound(dp.begin(), dp.end(), arr[i]);
+        if(it == dp.end()) {
+            dp.push_back(arr[i]); // 새 LIS 증가
+        } else {
+            *it = arr[i]; // 기존 수열 값 대체 (길이는 유지)
+        }
+    }
+
+    cout << dp.size() << '\n'; // 최대 상자 개수 (LIS 길이)
+    return 0;
+}
