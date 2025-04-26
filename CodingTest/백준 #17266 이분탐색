@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M;
+vector<int> light;
+
+// 현재 높이 H일 때 0~N 전부 비추는지 확인
+bool isEnough(int h) {
+    int coverage = 0;  // 현재까지 비춰지는 마지막 지점
+
+    for (int i = 0; i < M; i++) {
+        int l = light[i] - h;
+        int r = light[i] + h;
+
+        if (l > coverage) return false;  // 빈 공간 있음
+        coverage = max(coverage, r);     // 커버리지 확장
+
+        if (coverage >= N) return true;  // N까지 다 커버함
+    }
+
+    return coverage >= N;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> N >> M;
+    light.resize(M);
+    for (int i = 0; i < M; i++) {
+        cin >> light[i];
+    }
+
+    int left = 0, right = N, answer = N;
+
+    while (left <= right) {
+        int mid = (left + right) / 2;
+
+        if (isEnough(mid)) {
+            answer = mid;
+            right = mid - 1;  // 더 낮은 높이도 가능한지 탐색
+        } else {
+            left = mid + 1;   // 높이가 부족함
+        }
+    }
+
+    cout << answer << '\n';
+    return 0;
+}
