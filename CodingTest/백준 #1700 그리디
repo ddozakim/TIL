@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n, k;
+int arr[100];             // 사용 순서
+vector<int> multitap;     // 현재 멀티탭 상태
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n >> k;
+    for (int i = 0; i < k; ++i) {
+        cin >> arr[i];
+    }
+
+    int answer = 0;
+
+    for (int i = 0; i < k; ++i) {
+        int now = arr[i];
+
+        // 이미 꽂혀있으면 패스
+        bool plugged = false;
+        for (int x : multitap) {
+            if (x == now) {
+                plugged = true;
+                break;
+            }
+        }
+        if (plugged) continue;
+
+        // 자리가 남으면 꽂기만
+        if (multitap.size() < n) {
+            multitap.push_back(now);
+            continue;
+        }
+
+        // 뺄 기기를 골라야 할 때
+        int farthest = -1, idx = -1;
+
+        for (int j = 0; j < multitap.size(); ++j) {
+            int device = multitap[j];
+            int nextUse = 0;
+
+            // 이 기기가 다음에 언제 다시 쓰일까?
+            for (int t = i + 1; t < k; ++t) {
+                if (arr[t] == device) {
+                    nextUse = t;
+                    break;
+                }
+            }
+
+            // 다시 안 쓰일 기기
+            if (nextUse == 0) {
+                idx = j;
+                break;
+            }
+
+            // 가장 늦게 다시 쓰일 기기 선택
+            if (nextUse > farthest) {
+                farthest = nextUse;
+                idx = j;
+            }
+        }
+
+        // 기기 교체
+        multitap[idx] = now;
+        answer++;
+    }
+
+    cout << answer;
+    return 0;
+}
