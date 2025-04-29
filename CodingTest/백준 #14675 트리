@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n,q;
+vector<int> tree[100000];
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>n;
+    vector<pair<int,int>> list(n-1); // 간선 정보 저장
+    
+    for(int i=0; i<n-1; i++){
+        int a,b;
+        cin>>a>>b;
+        tree[a].push_back(b);
+        tree[b].push_back(a);
+        list.push_back({a,b});
+    }
+    
+    cin>>q;
+    while(q--){
+        int t,k;
+        cin>>t>>k;
+        if(t==1){
+            if(tree[k].size() >= 2){ //해당 정점의 연결된 간선이 2개 이상이면 단절점
+                cout<<"yes"<<"\n";
+            }
+            else cout<<"no"<<"\n";
+        }
+        else{
+            cout<<"yes"<<"\n"; // 트리에서는 항상 단절선
+        }
+    }
+    
+    return 0;
+}
