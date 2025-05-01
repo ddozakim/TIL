@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int N,L; 
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>N>>L;
+    
+    vector<pair<int,int>> v(N);
+    for(int i=0; i<N;i++){
+        cin>>v[i].first>>v[i].second;
+    }
+    
+    sort(v.begin(),v.end());
+    
+    int s = v[0].first;
+    int e = v[0].second;
+    int current=s;
+    int count=0;
+    
+    for(int i=1; i<N;i++){
+        //e보다 커질 때까지 더하기
+        while(current<e){
+            current+=L;
+            count++;
+        }
+        //널빤지 마지막 위치가 다음 웅덩이 시작 위치를 넘었으면 s 업데이트
+        if(current<v[i].first){
+            s=v[i].first;
+            e=v[i].second;
+            current=s;
+        }
+        else{
+            e = v[i].second;
+        }
+    }
+    while(current<e){
+            current+=L;
+            count++;
+    }
+    cout<<count;
+    
+    return 0;
+}
