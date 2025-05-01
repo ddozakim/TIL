@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n;
+    cin >> n;
+    vector<pair<int, int>> problems(n);
+
+    for (int i = 0; i < n; i++) {
+        cin >> problems[i].first >> problems[i].second;  // {deadline, ramen}
+    }
+
+    // 데드라인 기준 정렬
+    sort(problems.begin(), problems.end());
+
+    // 최소 힙 (가장 적은 컵라면부터 제거하기 위해)
+    priority_queue<int, vector<int>, greater<int>> pq;
+
+    for (auto [deadline, ramen] : problems) {
+        pq.push(ramen);
+        if (pq.size() > deadline) {
+            pq.pop(); // 가장 적은 컵라면을 제거
+        }
+    }
+
+    // 큐에 남은 것들의 총합이 최대 컵라면 수
+    long long total = 0;
+    while (!pq.empty()) {
+        total += pq.top();
+        pq.pop();
+    }
+
+    cout << total << "\n";
+    return 0;
+}
