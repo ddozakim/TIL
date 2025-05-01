@@ -1,0 +1,46 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int R, C;
+char board[20][20];
+bool visited[20][20];
+int dx[4] = {1, -1, 0, 0};
+int dy[4] = {0, 0, 1, -1};
+int answer = 0;
+
+void dfs(int x, int y, int bitmask, int count) {
+    answer = max(answer, count);
+
+    for (int i = 0; i < 4; ++i) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+
+        if (nx < 0 || ny < 0 || nx >= R || ny >= C) continue;
+
+        int alpha = board[nx][ny] - 'A';
+        if ((bitmask & (1 << alpha)) == 0) {
+            dfs(nx, ny, bitmask | (1 << alpha), count + 1);
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cin >> R >> C;
+    for (int i = 0; i < R; ++i) {
+        string line;
+        cin >> line;
+        for (int j = 0; j < C; ++j) {
+            board[i][j] = line[j];
+        }
+    }
+
+    int first = board[0][0] - 'A';
+    dfs(0, 0, 1 << first, 1);
+    cout << answer << '\n';
+
+    return 0;
+}
