@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int N;
+    cin >> N;
+
+    vector<pair<int, int>> gasStations(N);
+    for (int i = 0; i < N; i++) {
+        cin >> gasStations[i].first >> gasStations[i].second;
+    }
+
+    int L, P;
+    cin >> L >> P;
+
+    // 마을까지 거리 기준으로 정렬
+    sort(gasStations.begin(), gasStations.end());
+
+    // 우선순위 큐: max-heap (내림차순으로 가장 큰 연료부터 꺼냄)
+    priority_queue<int> pq;
+    int idx = 0, cnt = 0;
+
+    while (P < L) {
+        // 현재 연료로 갈 수 있는 거리 내 주유소들 넣기
+        while (idx < N && gasStations[idx].first <= P) {
+            pq.push(gasStations[idx].second);
+            idx++;
+        }
+
+        if (pq.empty()) {
+            // 더 이상 갈 수 있는 주유소가 없음
+            cout << -1 << '\n';
+            return 0;
+        }
+
+        // 가장 큰 연료를 얻을 수 있는 주유소에서 주유
+        P += pq.top();
+        pq.pop();
+        cnt++;
+    }
+
+    cout << cnt << '\n';
+    return 0;
+}
