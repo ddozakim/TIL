@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//불만도 = |예상등수 - 실제 등수|
+//N명의 사람들의 불만도의 총 합을 최소로 만들기 
+//output : 최소 불문도의 합 
+
+int n;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>n;
+    vector<int> exRank(n);
+    
+    for(int i=0; i<n;i++){
+        cin>>exRank[i];
+    }
+    
+    sort(exRank.begin(),exRank.end());
+    int r =1;
+    long long answer =0;
+    for(auto x : exRank){
+        answer+= abs(r-x);
+        r++;
+    }
+    cout<<answer;
+    return 0;
+}
