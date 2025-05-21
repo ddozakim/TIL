@@ -1,0 +1,51 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <cstring>
+
+using namespace std;
+
+vector<int> tree[101];
+bool visited[101];
+int cnt;
+
+int bfs(int a, int b){
+    memset(visited,false, sizeof(visited));
+    queue<int> q;
+    q.push(a); 
+    visited[a]=true; visited[b] =true;
+
+    while(!q.empty()){
+        int now = q.front();
+        q.pop();
+        
+        for(int i=0; i<tree[now].size();i++){
+            int next = tree[now][i];
+            if(!visited[next]){
+                cnt++;
+                visited[next]=true;
+                q.push(next);            
+            }
+        }
+    }
+    return cnt;
+}
+
+int solution(int n, vector<vector<int>> wires) {
+    int answer = 1e9;
+    
+    for(int i=0; i<wires.size();i++){
+        tree[wires[i][0]].push_back(wires[i][1]);
+        tree[wires[i][1]].push_back(wires[i][0]);
+    }
+    
+    // 모든 간선 탐색 
+    for(auto wire : wires){
+        cnt=1;
+        bfs(wire[0],wire[1]);
+        answer= min(answer, abs(2*cnt-n));
+    }
+    
+    return answer;
+}
