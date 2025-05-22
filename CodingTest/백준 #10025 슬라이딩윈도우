@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int MAX_POS = 1000000;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int N, K;
+    cin >> N >> K;
+
+    vector<int> ice(MAX_POS + 1, 0);
+
+    // 얼음 양 저장
+    for (int i = 0; i < N; ++i) {
+        int g, x;
+        cin >> g >> x;
+        ice[x] = g;
+    }
+
+    int windowSize = 2 * K + 1;
+    long long currentSum = 0;
+
+    // 초기 윈도우 합 계산
+    for (int i = 0; i < windowSize && i <= MAX_POS; ++i) {
+        currentSum += ice[i];
+    }
+
+    long long maxSum = currentSum;
+
+    // 슬라이딩 윈도우 이동
+    for (int i = windowSize; i <= MAX_POS; ++i) {
+        currentSum += ice[i] - ice[i - windowSize];
+        maxSum = max(maxSum, currentSum);
+    }
+
+    cout << maxSum << '\n';
+
+    return 0;
+}
