@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int n,m;
+char arr[51][51];
+int dx[4]={1,-1,0,0};
+int dy[4]={0,0,1,-1};
+bool visited[51][51];
+int startX, startY;
+int waterX, waterY;
+
+struct info{
+  int x,y;
+  int count;
+  bool isWater;
+};
+
+void bfs(queue<info>& q){
+    
+    q.push({startX,startY,0,false});
+    
+    visited[startX][startY]=true;
+    
+    while(!q.empty()){
+        int a= q.front().x;
+        int b = q.front().y;
+        int c = q.front().count;
+        bool isWater =q.front().isWater;
+        q.pop();
+        
+        if(!isWater){
+            if(arr[a][b]=='D'){
+                cout<<c;
+                return;
+            }
+            
+            for(int i=0; i<4; i++){
+                int nx = a+dx[i];
+                int ny = b+dy[i];
+                if(nx<0 ||ny<0 ||nx>=n|| ny>=m|| arr[nx][ny]=='*'||arr[nx][ny]=='X') continue;
+                if(!visited[nx][ny]){
+                    visited[nx][ny]=true;
+                    q.push({nx,ny,c+1,false});
+                }
+            }
+        }
+        
+        else{
+            for(int i=0; i<4; i++){
+                int nx = a+dx[i];
+                int ny = b+dy[i];
+                if(nx<0 ||ny<0 ||nx>=n|| ny>=m|| arr[nx][ny]=='D'||arr[nx][ny]=='X') continue;
+                 if(!visited[nx][ny]){
+                    visited[nx][ny]=true;
+                    arr[nx][ny]='*';
+                    q.push({nx,ny,c+1,true});
+                }
+                
+            }
+        }
+        
+    }
+    cout<<"KAKTUS";
+    return;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin>>n>>m;
+    queue<info> q;
+
+    for(int i=0; i<n; i++){
+        string str;
+        cin>>str;
+        for(int j=0; j<m;j++){
+            arr[i][j]=str[j];
+            if(str[j]=='S'){
+                startX=i; startY=j;
+            }
+            else if(str[j]=='*'){
+                q.push({i,j,0,true});
+            }
+        
+        }
+    }
+    
+    bfs(q);
+    
+    return 0;
+}
