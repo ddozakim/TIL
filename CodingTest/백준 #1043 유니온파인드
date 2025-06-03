@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int parent[51];  // 최대 사람 수 50
+
+int find(int x) {
+    if (parent[x] == x) return x;
+    return parent[x] = find(parent[x]);  // 경로 압축
+}
+
+void unionSet(int a, int b) {
+    a = find(a);
+    b = find(b);
+    if (a != b) parent[b] = a;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n, m;  // 사람 수, 파티 수
+    cin >> n >> m;
+
+    // 진실 아는 사람
+    int t;
+    cin >> t;
+    vector<int> truth(t);
+    for (int i = 0; i < t; ++i) {
+        cin >> truth[i];
+    }
+
+    // 초기화
+    for (int i = 1; i <= n; ++i) parent[i] = i;
+
+    // 파티 정보 저장
+    vector<vector<int>> parties(m);
+    for (int i = 0; i < m; ++i) {
+        int cnt;
+        cin >> cnt;
+        parties[i].resize(cnt);
+        for (int j = 0; j < cnt; ++j) {
+            cin >> parties[i][j];
+        }
+
+        // 파티에 참석한 사람들 모두 같은 그룹으로 union
+        for (int j = 1; j < cnt; ++j) {
+            unionSet(parties[i][0], parties[i][j]);
+        }
+    }
+
+    // 진실 아는 사람들의 대표 루트 저장
+    set<int> truthRoots;
+    for (int person : truth) {
+        truthRoots.insert(find(person));
+    }
+
+    // 과장할 수 있는 파티 수 카운트
+    int result = 0;
+    for (int i = 0; i < m; ++i) {
+        bool canLie = true;
+        for (int person : parties[i]) {
+            if (truthRoots.count(find(person))) {
+                canLie = false;
+                break;
+            }
+        }
+        if (canLie) result++;
+    }
+
+    cout << result << '\n';
+    return 0;
+}
