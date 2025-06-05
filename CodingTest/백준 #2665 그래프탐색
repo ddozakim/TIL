@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n;
+int arr[50][50];
+int dist[50][50];
+int dx[4] = {1, -1, 0, 0};
+int dy[4] = {0, 0, 1, -1};
+
+int dijkstra() {
+    priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
+    pq.push({0, 0, 0}); // {비용, x, y}
+    dist[0][0] = 0;
+
+    while (!pq.empty()) {
+        auto [cost, x, y] = pq.top();
+        pq.pop();
+
+        if (dist[x][y] < cost) continue; // 이미 더 좋은 경로로 방문됨
+
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i], ny = y + dy[i];
+            if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+
+            int nextCost = cost + (arr[nx][ny] == 0 ? 1 : 0);
+
+            if (dist[nx][ny] > nextCost) {
+                dist[nx][ny] = nextCost;
+                pq.push({nextCost, nx, ny});
+            }
+        }
+    }
+
+    return dist[n - 1][n - 1];
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        string row;
+        cin >> row;
+        for (int j = 0; j < n; j++) {
+            arr[i][j] = row[j] - '0'; // '0' → 0, '1' → 1
+        }
+    }
+
+    // 거리 배열 초기화
+    for (int i = 0; i < n; ++i) {
+        fill(dist[i], dist[i] + n, 1e9);
+    }
+
+    cout << dijkstra() << '\n';
+    return 0;
+}
